@@ -91,9 +91,9 @@ public class Introduce extends AppCompatActivity {
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         endlat = latLot.getMarklat();
         endlot = latLot.getMarklot();
-        System.out.println("这是传送的URL" + shopurl);
-        System.out.println("这是传送的经纬度" + endlat);
-        System.out.println("这是传送的经纬度" + endlot);
+//        System.out.println("这是传送的URL" + shopurl);
+//        System.out.println("这是传送的经纬度" + endlat);
+//        System.out.println("这是传送的经纬度" + endlot);
 
         mDialog = ProgressDialog.show(Introduce.this, "",
                 "Loading. Please wait...", true);

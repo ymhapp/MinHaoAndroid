@@ -105,8 +105,7 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
 
         // 新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
-//        startlat = bundle.getDouble("marklat");
-//        startlot = bundle.getDouble("marklot");
+
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         endlat = latLot.getMarklat();
         endlot = latLot.getMarklot();

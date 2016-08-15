@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 public class NaviActivity extends Activity {
 
-    public final static String SER_KEY = "com.andy.ser";
+    //public final static String SER_KEY = "com.andy.ser";
     public static List<Activity> activityList = new LinkedList<Activity>();
 
 
@@ -41,6 +41,7 @@ public class NaviActivity extends Activity {
 
     private Double endLongitude;
     private Double endLatitude;
+
 
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
 

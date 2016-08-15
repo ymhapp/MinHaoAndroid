@@ -20,7 +20,7 @@
             android:background="#01d3ae">
 
             <TextView
-                android:id="@+id/userid"
+                android:id="@+id/usernickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/userpic"

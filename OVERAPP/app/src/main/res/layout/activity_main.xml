@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.overapp.MainActivity" >
+    tools:context="com.example.overapp.MainActivity">
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapView"
@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true">
 
 
         <LinearLayout
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/l3"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/border"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/city"
@@ -43,8 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="市内找" >
-                </TextView>
+                    android:text="市内找"></TextView>
 
                 <AutoCompleteTextView
                     android:id="@+id/searchkey"
@@ -66,12 +65,6 @@
                 android:onClick="searchButtonProcess" />
         </LinearLayout>
 
-        <Button
-            android:layout_width="83dp"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/btn_reg"
-            android:layout_gravity="left|top" />
     </FrameLayout>
 
 </RelativeLayout>

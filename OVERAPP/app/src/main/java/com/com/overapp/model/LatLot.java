@@ -6,12 +6,33 @@ import java.io.Serializable;
  * Created by acer on 2016/8/11.
  */
 public class LatLot implements Serializable {
+    private String str_account;
+    private String str_psd;
+
+    //路线规划的起点，终点
     private double marklat;
     private double marklot;
     private double endlat;
     private double endlot;
     private String endAdd;
     private static final long serialVersionUID = -7620435178023928252L;
+
+
+    public String getStr_account() {
+        return str_account;
+    }
+
+    public void setStr_account(String str_account) {
+        this.str_account = str_account;
+    }
+
+    public String getStr_psd() {
+        return str_psd;
+    }
+
+    public void setStr_psd(String str_psd) {
+        this.str_psd = str_psd;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

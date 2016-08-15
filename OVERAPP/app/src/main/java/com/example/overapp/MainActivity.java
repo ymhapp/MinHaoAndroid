@@ -73,8 +73,12 @@ import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends ActionBarActivity implements CloudListener,
         OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
-    private Button btnreg;
 
+    //接收用户信息
+    private String str_account;
+    private String str_psd;
+
+    //传递选中的目的地
     public final static String SER_KEY = "com.andy.ser";
     private double marklat;
     private double marklot;
@@ -142,29 +146,19 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this;
-        SDKInitializer.initialize(getApplicationContext());
-        //Bmob
-        //第一：默认初始化
-        Bmob.initialize(this, "37167ef9a0a7b5611191400982366aa9");
 
-        setContentView(R.layout.activity_register);
-        // 新页面接收数据
-        Bundle bundle = this.getIntent().getExtras();
+        LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+        str_account = latLot.getStr_account();
+        str_psd = latLot.getStr_psd();
+//
+
+        System.out.println("传送的用户ID" + str_account);
+
+
+        //初始化百度地图SDK
+        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         CloudManager.getInstance().init(MainActivity.this);
-
-        btnreg=(Button)findViewById(R.id.btn_reg);
-        btnreg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, RegisterActivity.class);
-                // 用Bundle携带数据
-                Bundle bundle = new Bundle();
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
 
 
         // 初始化搜索模块，注册搜索事件监听
@@ -219,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                     @Override
                     public void done(List<Shop> list, BmobException e) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("query address");
+                        builder.setTitle("店铺名称");
                         if (e == null && list.size() != 0) {
                             for (Shop shop : list) {
                                 straddress = shop.getAddress();
@@ -253,15 +247,12 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
                         // 用Bundle携带数据
                         Bundle bundle = new Bundle();
-                        // 将参数mLatitude传递给Latitude
+                        // 传递店铺信息
                         bundle.putString("shopid", strid);
                         bundle.putString("shopname", strshopname);
                         bundle.putString("shopad", straddress);
                         bundle.putString("shopurl", strurl);
-//                        //传送点击的经纬度
-//                        bundle.putDouble("shopurl", marklat);
-//                        bundle.putDouble("shopurl", marklot);
-
+                        //传递点击的Marker坐标
                         LatLot latlot = new LatLot();
                         latlot.setMarklat(marklat);
                         latlot.setMarklot(marklot);
@@ -403,14 +394,20 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             case R.id.map_food:
                 searchfood();
                 break;
-//            //个人中心
-//            case R.id.me:
-//                Intent intent = new Intent();
-//                intent.setClass(MainActivity.this, RegisterActivity.class);
-//                // 用Bundle携带数据
-//                Bundle bundle = new Bundle();
-//                intent.putExtras(bundle);
-//                startActivity(intent);
+            //个人中心
+            case R.id.me:
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, MeActivity.class);
+
+                // 用Bundle携带数据
+                Bundle bundle = new Bundle();
+                LatLot latlot = new LatLot();
+                latlot.setStr_account(str_account);
+                latlot.setStr_psd(str_psd);
+                bundle.putSerializable(SER_KEY, latlot);
+
+                intent.putExtras(bundle);
+                startActivity(intent);
 
         }
         return super.onOptionsItemSelected(item);
