@@ -13,11 +13,17 @@ import com.com.overapp.model.Collection;
 import com.com.overapp.model.LatLot;
 import com.com.overapp.model.User;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class CorrectActivity extends AppCompatActivity {
+
+    private String user_obj;
+
     public final static String SER_KEY = "com.andy.ser";
     private String str_account;
     private String mpsd;
@@ -37,7 +43,7 @@ public class CorrectActivity extends AppCompatActivity {
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         str_account = latLot.getStr_account();
         getView();
-
+        queryUserOBJ();
         btn_correct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,9 +58,9 @@ public class CorrectActivity extends AppCompatActivity {
                 } else {
                     updateUser();
                     Toast.makeText(CorrectActivity.this, "修改成功", Toast.LENGTH_LONG).show();
-                // 点击button跳转到导航页面
-                Intent intent = new Intent();
-                intent.setClass(CorrectActivity.this, MainActivity.class);
+                    // 点击button跳转到导航页面
+                    Intent intent = new Intent();
+                    intent.setClass(CorrectActivity.this, MainActivity.class);
                     // 用Bundle携带数据
                     Bundle bundle = new Bundle();
                     LatLot latlot = new LatLot();
@@ -62,18 +68,35 @@ public class CorrectActivity extends AppCompatActivity {
                     bundle.putSerializable(SER_KEY, latlot);
                     intent.putExtras(bundle);
                     startActivity(intent);
-//
-
-            }
+                    finish();
+                }
             }
         });
     }
 
+    private void queryUserOBJ() {
+        final BmobQuery<User> user = new BmobQuery<User>();
+        //用店铺id进行查询
+        user.addWhereEqualTo("userAccount", str_account);
+        user.setLimit(100);
+        user.findObjects(new FindListener<User>() {
+            @Override
+            public void done(List<User> list, BmobException e) {
+                if (e == null) {
+                    for (User userobj : list) {
+                        user_obj = userobj.getObjectId();
+                    }
+                }
+            }
+        });
+    }
+
+    //更新用户昵称
     private void updateUser() {
         User user = new User();
         user.setUserNickName(mnickname);
         user.setUserPassWord(mpsd);
-        user.update("XAfG222A", new UpdateListener() {
+        user.update(user_obj, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {

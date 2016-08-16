@@ -8,10 +8,21 @@ import cn.bmob.v3.listener.SaveListener;
  * Created by acer on 2016/8/14.
  */
 public class Collection extends BmobObject {
+//    private  String objectId;
     private String ctShopName;
     private String ctShopadd;
     private String ctShopBest;
     private String userAccount;
+//
+//    @Override
+//    public String getObjectId() {
+//        return objectId;
+//    }
+//
+//    @Override
+//    public void setObjectId(String objectId) {
+//        this.objectId = objectId;
+//    }
 
     public String getUserAccount() {
         return userAccount;

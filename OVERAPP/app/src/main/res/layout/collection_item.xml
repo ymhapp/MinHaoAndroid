@@ -66,11 +66,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:ellipsize="marquee"
-            android:focusable="true"
-
-            android:focusableInTouchMode="true"
-            android:gravity="left"
             android:singleLine="true"
             android:text="13123124123"
             android:textSize="22sp" />

@@ -83,8 +83,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
         android:divider="#E8E8E8"
-        android:dividerHeight="9px"
-      >
+        android:clickable="true"
+        android:dividerHeight="9px">
 
     </ListView>
 

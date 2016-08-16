@@ -105,14 +105,11 @@ public class Introduce extends AppCompatActivity {
 
         //开启线程
         new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
-        //  new Thread(new PicUrlRunnable(mHandler, THREAD_3, menuPic.get(i))).start();
-
 
         //设置店名和菜单名
         tname.setText(shopname);
         tad.setText(shopad);
 
-        //dataList = new ArrayList<Map<String, Object>>();
          queryMenu();
 
 

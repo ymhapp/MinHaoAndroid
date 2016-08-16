@@ -9,9 +9,17 @@ public class User extends BmobObject {
     private String userAccount;
     private String userPassWord;
     private String userNickName;
+//    private String objectId;
 
-
-
+//    @Override
+//    public String getObjectId() {
+//        return objectId;
+//    }
+//
+//    @Override
+//    public void setObjectId(String objectId) {
+//        this.objectId = objectId;
+//    }
 
     public String getUserAccount() {
         return userAccount;

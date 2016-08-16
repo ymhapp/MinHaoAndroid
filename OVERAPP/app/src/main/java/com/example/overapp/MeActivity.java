@@ -1,9 +1,13 @@
 package com.example.overapp;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,8 +33,12 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class MeActivity extends AppCompatActivity {
+
+    private String cor_obj;
+
     //修改后的用户昵称
     private String cort_nickname;
 
@@ -52,9 +60,6 @@ public class MeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_me);
-        // 新页面接收数据
-        //Bundle bundle = this.getIntent().getExtras();
-        //cort_nickname = bundle.getString("cort_nickname");
 
         // 新页面接收数据
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
@@ -62,6 +67,7 @@ public class MeActivity extends AppCompatActivity {
         str_psd = latLot.getStr_psd();
         System.out.println("用户ID" + str_account);
         getView();
+        queryCollectionOBJ();
         queryNmae();
         queryCollection();
 
@@ -82,31 +88,31 @@ public class MeActivity extends AppCompatActivity {
             }
         });
 
-
-//        ctlistview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // 点击button跳转到导航页面
-//                Intent intent = new Intent();
-//                intent.setClass(MeActivity.this, Introduce.class);
-//                startActivity(intent);
-//            }
-//        });
-//        ctlistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Log.e("MeActivity", view.toString() + "position=" + position);
-//                CharSequence number = ((TextView) view).getText();
-//               System.out.println("dfkjnslkdfjsd");
-//                return true;
-//            }
-//        });
     }
+
+    //查询收藏店铺的ID
+    private void queryCollectionOBJ() {
+        final BmobQuery<Collection> collection = new BmobQuery<Collection>();
+        //用店铺id进行查询
+        collection.addWhereEqualTo("userAccount", str_account);
+        collection.setLimit(100);
+        collection.findObjects(new FindListener<Collection>() {
+            @Override
+            public void done(List<Collection> list, BmobException e) {
+                if (e == null) {
+                    for (Collection collectionobj : list) {
+                        cor_obj = collectionobj.getObjectId();
+                    }
+                }
+            }
+        });
+    }
+
 
     //查询用户收藏的店铺
     private void queryCollection() {
         final BmobQuery<Collection> collection = new BmobQuery<Collection>();
+        //
         //用店铺id进行查询
         collection.addWhereEqualTo("userAccount", str_account);
         collection.setLimit(100);
@@ -118,18 +124,90 @@ public class MeActivity extends AppCompatActivity {
                         ctnameList.add(collection_shop.getCtShopName());
                         ctaddList.add(collection_shop.getCtShopadd());
                         ctbestList.add(collection_shop.getCtShopBest());
-
-
-                        CollectionAdapter collectionAdapter = new CollectionAdapter(MeActivity.this, collectionItemBeanList);
-                        ctlistview.setAdapter(collectionAdapter);
-
-                        for (int i = 0; i < ctnameList.size(); i++) {
-                            collectionItemBeanList.add(new CollectionItemBean(ctnameList.get(i).toString(),
-                                    ctaddList.get(i).toString(), ctbestList.get(i).toString()));
-                        }
                     }
+
+                    for (int i = 0; i < ctbestList.size(); i++) {
+                        collectionItemBeanList.add(new CollectionItemBean(ctnameList.get(i).toString(),
+                                ctaddList.get(i).toString(), ctbestList.get(i).toString()));
+                    }
+                    CollectionAdapter collectionAdapter = new CollectionAdapter(MeActivity.this, collectionItemBeanList);
+                    ctlistview.setAdapter(collectionAdapter);
+
+                    ctlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // 点击button跳转到导航页面
+                            Intent intent = new Intent();
+                            intent.setClass(MeActivity.this, Introduce.class);
+//                                    // 用Bundle携带数据
+                            Bundle bundle = new Bundle();
+                            LatLot latlot = new LatLot();
+                            latlot.setStr_account(str_account);
+                            bundle.putSerializable(SER_KEY, latlot);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                    });
+
+                    //长按item的监听
+                    ctlistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            //长按弹出dialog
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
+                            builder.setTitle("提示");
+                            builder.setMessage("是否删除");
+                            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() { //设置确定按钮
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //删除收藏店铺
+                                    deleCollection();
+                                    Toast.makeText(MeActivity.this, "成功移除", Toast.LENGTH_SHORT).show();
+                                    // 点击button跳转到导航页面
+                                    Intent intent = new Intent();
+                                    intent.setClass(MeActivity.this, MainActivity.class);
+//                                    // 用Bundle携带数据
+                                    Bundle bundle = new Bundle();
+                                    LatLot latlot = new LatLot();
+                                    latlot.setStr_account(str_account);
+                                    bundle.putSerializable(SER_KEY, latlot);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+
+                                }
+                            });
+
+                            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.create().show();
+                            return false;
+                        }
+                    });
+
+
                 }
 
+
+            }
+        });
+    }
+
+    //删除收藏店铺
+    private void deleCollection() {
+        Collection collection = new Collection();
+        collection.setObjectId(cor_obj);
+        collection.delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    Log.i("bmob", "成功");
+                } else {
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
             }
         });
 
@@ -153,14 +231,8 @@ public class MeActivity extends AppCompatActivity {
                                           str_nickname = user.getUserNickName();
                                           System.out.println("nickname:" + str_nickname);
                                           musernickname.setText(str_nickname);
-
                                       }
-                                  }
-// else if(!cort_nickname.equals("")){
-//                    musernickname.setText(cort_nickname);
-//                }
-
-                                  else {
+                                  } else {
                                       System.out.println("查询失败");
                                   }
                               }
@@ -174,5 +246,6 @@ public class MeActivity extends AppCompatActivity {
         ctlistview = (ListView) findViewById(R.id.collectionlist);
         musernickname = (TextView) findViewById(R.id.usernickname);
     }
+
 
 }
