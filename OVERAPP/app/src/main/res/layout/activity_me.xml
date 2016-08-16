@@ -10,9 +10,11 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -59,7 +61,21 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="139dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我的收藏"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="25dp" />
+        </RelativeLayout>
+
     </LinearLayout>
+
 
     <ListView
         android:id="@+id/collectionlist"
@@ -67,5 +83,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
         android:divider="#E8E8E8"
-        android:dividerHeight="3px"></ListView>
+        android:dividerHeight="9px"
+      >
+
+    </ListView>
+
 </RelativeLayout>

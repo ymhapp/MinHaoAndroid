@@ -91,6 +91,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     private String markAdress;
     private String strshopname;
     private String strurl;
+    private String strbest;
     // 存储当前定位信息
     public BDLocation currlocation = null;
 
@@ -146,12 +147,10 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this;
-
+//接收用户信息
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         str_account = latLot.getStr_account();
         str_psd = latLot.getStr_psd();
-//
-
         System.out.println("传送的用户ID" + str_account);
 
 
@@ -220,6 +219,8 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                                 strid = shop.getObjectId();
                                 strshopname = shop.getShopName();
                                 strurl = shop.getShopUrl();
+                                strbest = shop.getTheBest();
+                                System.out.println("推荐" + strbest);
                             }
                         }
                         builder.setMessage(strshopname);
@@ -252,10 +253,13 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         bundle.putString("shopname", strshopname);
                         bundle.putString("shopad", straddress);
                         bundle.putString("shopurl", strurl);
+                        bundle.putString("shopbest", strbest);
+
                         //传递点击的Marker坐标
                         LatLot latlot = new LatLot();
                         latlot.setMarklat(marklat);
                         latlot.setMarklot(marklot);
+                        latlot.setStr_account(str_account);
                         bundle.putSerializable(SER_KEY, latlot);
 
                         intent.putExtras(bundle);

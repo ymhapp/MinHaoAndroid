@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         intent.putExtras(bundle);
                         startActivity(intent);
-
+                        finish();
 
                     }
                 });
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this, RegisterActivity.class);
-
+                startActivity(intent);
             }
         });
     }

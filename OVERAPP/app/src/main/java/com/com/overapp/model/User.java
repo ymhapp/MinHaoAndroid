@@ -10,6 +10,9 @@ public class User extends BmobObject {
     private String userPassWord;
     private String userNickName;
 
+
+
+
     public String getUserAccount() {
         return userAccount;
     }

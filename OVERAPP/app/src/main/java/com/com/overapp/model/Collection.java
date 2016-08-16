@@ -9,8 +9,17 @@ import cn.bmob.v3.listener.SaveListener;
  */
 public class Collection extends BmobObject {
     private String ctShopName;
-    private String ctShopAdd;
+    private String ctShopadd;
     private String ctShopBest;
+    private String userAccount;
+
+    public String getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
+    }
 
     public String getCtShopName() {
         return ctShopName;
@@ -20,12 +29,12 @@ public class Collection extends BmobObject {
         this.ctShopName = ctShopName;
     }
 
-    public String getCtShopAdd() {
-        return ctShopAdd;
+    public String getCtShopadd() {
+        return ctShopadd;
     }
 
-    public void setCtShopAdd(String ctShopAdd) {
-        this.ctShopAdd = ctShopAdd;
+    public void setCtShopadd(String ctShopadd) {
+        this.ctShopadd = ctShopadd;
     }
 
     public String getCtShopBest() {

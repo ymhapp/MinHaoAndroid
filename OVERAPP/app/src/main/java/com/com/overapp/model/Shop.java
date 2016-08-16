@@ -10,6 +10,20 @@ import cn.bmob.v3.BmobObject;
  */
 public class Shop extends BmobObject {
     private String address;
+    private String shopName;
+    private Double latitude;
+    private Double longitude;
+    private List<Menu> shopMenu = new ArrayList<Menu>();
+    private String shopUrl;
+    private String theBest;
+
+    public String getTheBest() {
+        return theBest;
+    }
+
+    public void setTheBest(String theBest) {
+        this.theBest = theBest;
+    }
 
     public String getAddress() {
         return address;
@@ -18,12 +32,6 @@ public class Shop extends BmobObject {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    private String shopName;
-    private Double latitude;
-    private Double longitude;
-    private List<Menu> shopMenu = new ArrayList<Menu>();
-    private String shopUrl;
 
     public String getShopUrl() {
         return shopUrl;

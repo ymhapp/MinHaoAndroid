@@ -12,8 +12,10 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -41,6 +43,7 @@ import cn.bmob.v3.listener.FindListener;
 
 public class Introduce extends AppCompatActivity {
     public final static String SER_KEY = "com.andy.ser";
+    private String str_account;
     //接收传送过来的坐标
     private double endlat;
     private double endlot;
@@ -56,7 +59,7 @@ public class Introduce extends AppCompatActivity {
     private ListView listView;                              //显示图片和菜单名的listview
     private TextView tad;                                   //店铺地址栏
     private TextView tname;                                //店铺名字
-    private Button btn_like;
+    private ImageButton btn_like;
     private Button btn_go;
     private ImageView listPic;
     private ImageView imageView;
@@ -70,7 +73,7 @@ public class Introduce extends AppCompatActivity {
     private String price;
     private String shopid;
     private String shopname;
-
+    private String shopBest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +90,15 @@ public class Introduce extends AppCompatActivity {
         shopad = bundle.getString("shopad");
         shopname = bundle.getString("shopname");
         shopurl = bundle.getString("shopurl");
-
+        shopBest = bundle.getString("shopbest");
+        //接收目的地坐标
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         endlat = latLot.getMarklat();
         endlot = latLot.getMarklot();
-//        System.out.println("这是传送的URL" + shopurl);
-//        System.out.println("这是传送的经纬度" + endlat);
-//        System.out.println("这是传送的经纬度" + endlot);
+        str_account = latLot.getStr_account();
+        System.out.println("这是传送的URL" + shopurl);
+        System.out.println("这是传送的经纬度" + endlat);
+        System.out.println("这是传送的经纬度" + endlot);
 
         mDialog = ProgressDialog.show(Introduce.this, "",
                 "Loading. Please wait...", true);
@@ -107,8 +112,73 @@ public class Introduce extends AppCompatActivity {
         tname.setText(shopname);
         tad.setText(shopad);
 
-        dataList = new ArrayList<Map<String, Object>>();
+        //dataList = new ArrayList<Map<String, Object>>();
+         queryMenu();
 
+
+
+
+        //btn_go的监听
+        btn_go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 点击button跳转到导航页面
+                Intent intent = new Intent();
+                intent.setClass(Introduce.this,
+                        Routeplan.class);
+                // 用Bundle携带数据
+                Bundle bundle = new Bundle();
+                LatLot latlot = new LatLot();
+                latlot.setMarklat(endlat);
+                latlot.setMarklot(endlot);
+                latlot.setEndAdd(shopad);
+                bundle.putSerializable(SER_KEY, latlot);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+
+        //收藏button监听
+        btn_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Collection collection = new Collection();
+                collection.setCtShopName(shopname);
+                collection.setCtShopBest(shopBest);
+                collection.setCtShopadd(shopad);
+                collection.setUserAccount(str_account);
+                collection.save(new SaveListener<String>() {
+
+                    @Override
+                    public void done(String s, BmobException e) {
+                        System.out.println("成功");
+                    }
+                });
+
+            }
+        });
+
+        //
+        btn_like.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    //重新设置按下时的背景图片
+                    ((ImageButton)v).setImageDrawable(getResources().getDrawable(R.drawable.red));}
+//               else if(event.getAction() == MotionEvent.ACTION_UP){
+//                    //再修改为抬起时的正常图片
+//                    ((ImageButton)v).setImageDrawable(getResources().getDrawable(R.drawable.grray));
+//                }
+                return false;
+            }
+        });
+
+    }
+
+    private void queryMenu() {
         //Bmob查询menu
         final BmobQuery<Menu> menu = new BmobQuery<Menu>();
         //用店铺id进行查询
@@ -136,48 +206,6 @@ public class Introduce extends AppCompatActivity {
                 }
             }
         });
-
-
-        //btn_go的监听
-        btn_go.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 点击button跳转到导航页面
-                Intent intent = new Intent();
-                intent.setClass(Introduce.this,
-                        Routeplan.class);
-                // 用Bundle携带数据
-                Bundle bundle = new Bundle();
-                LatLot latlot = new LatLot();
-                latlot.setMarklat(endlat);
-                latlot.setMarklot(endlot);
-                latlot.setEndAdd(shopad);
-                bundle.putSerializable(SER_KEY, latlot);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-        //btn_like
-        btn_like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Collection collection = new Collection();
-                collection.setCtShopName(shopname);
-                collection.setCtShopBest(shopname);
-                collection.setCtShopAdd(shopad);
-                collection.save(new SaveListener<String>() {
-
-                    @Override
-                    public void done(String s, BmobException e) {
-                        System.out.println("成功");
-                    }
-                });
-
-            }
-        });
-
-
     }
 
 
@@ -185,7 +213,7 @@ public class Introduce extends AppCompatActivity {
         listPic = (ImageView) findViewById(R.id.pic);
         imageView = (ImageView) findViewById(R.id.shoppic);
         btn_go = (Button) findViewById(R.id.shop_go);
-        btn_like = (Button) findViewById(R.id.btn_like);
+        btn_like = (ImageButton) findViewById(R.id.btn_like);
         listView = (ListView) findViewById(R.id.listView);
         tname = (TextView) findViewById(R.id.shop_name);
         tad = (TextView) findViewById(R.id.shopaddress);
