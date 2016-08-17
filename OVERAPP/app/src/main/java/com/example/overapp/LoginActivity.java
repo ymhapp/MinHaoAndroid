@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         getView();
-
+        mlogin.getBackground().setAlpha(100);
         //登录button的监听
         mlogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,9 +53,8 @@ public class LoginActivity extends AppCompatActivity {
                 login_account = mlogin_account.getText().toString();
                 login_psd = mlogin_psd.getText().toString();
                 System.out.println("信息" + login_account);
-;
-
-
+                ;
+                //查询用户的登录信息并进行验证
                 final BmobQuery<User> user = new BmobQuery<User>();
                 user.addWhereEqualTo("userAccount", login_account);
                 user.setLimit(1);
@@ -70,14 +69,12 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent();
                                 intent.setClass(LoginActivity.this, MainActivity.class);
-
-                                // 用Bundle携带数据
+                                // 将用户信息传输到首页
                                 Bundle bundle = new Bundle();
                                 LatLot latlot = new LatLot();
                                 latlot.setStr_account(login_account);
                                 latlot.setStr_psd(login_psd);
                                 bundle.putSerializable(SER_KEY, latlot);
-
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 finish();
@@ -89,48 +86,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-//                //--and条件1
-//                BmobQuery<User> eq1 = new BmobQuery<User>();
-//                eq1.addWhereEqualTo("userAccount", login_account);//年龄<=29
-//                //--and条件2
-//                BmobQuery<User> eq2 = new BmobQuery<User>();
-//                eq2.addWhereEqualTo("userPassWord", login_psd);//年龄>=6
-//
-//
-//                //最后组装完整的and条件
-//                List<BmobQuery<User>> andQuerys = new ArrayList<BmobQuery<User>>();
-//                andQuerys.add(eq1);
-//                andQuerys.add(eq2);
-//
-//
-//                //查询符合整个and条件的人
-//                BmobQuery<User> query = new BmobQuery<User>();
-//                query.and(andQuerys);
-//                query.findObjects(new FindListener<User>() {
-//                    @Override
-//                    public void done(List<User> list, BmobException e) {
-//                        if (e == null) {
-//                            System.out.println("成功");
-//                            Intent intent = new Intent();
-//                            intent.setClass(LoginActivity.this, MainActivity.class);
-//
-////                             // 用Bundle携带数据
-////                            Bundle bundle = new Bundle();
-////                            LatLot latlot = new LatLot();
-////                            latlot.setStr_account(login_account);
-////                            latlot.setStr_psd(login_psd);
-////                            bundle.putSerializable(SER_KEY, latlot);
-////
-////                            intent.putExtras(bundle);
-////                            startActivity(intent);
-////                            finish();
-//                        } else {
-//                            Toast.makeText(LoginActivity.this, "登录错误", Toast.LENGTH_LONG).show();
-//                        }
-//
-//                    }
-//                });
 
             }
 

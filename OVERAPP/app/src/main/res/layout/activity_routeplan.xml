@@ -113,14 +113,11 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/drive"
+                android:id="@+id/btn_navi"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="2dip"
-                android:layout_marginRight="2dip"
+                android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:onClick="searchButtonProcess"
-                android:text="驾车搜索" />
+                android:text="导航" />
 
             <Button
                 android:id="@+id/transit"
@@ -142,23 +139,8 @@
                 android:onClick="searchButtonProcess"
                 android:text="步行搜索" />
 
-            <Button
-                android:id="@+id/bike"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="2dip"
-                android:layout_marginRight="2dip"
-                android:layout_weight="1.0"
-                android:onClick="searchButtonProcess"
-                android:text="骑行搜索" />
-
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_navi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="导航" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.com.overapp.model.Collection;
@@ -42,6 +43,8 @@ import cn.bmob.v3.listener.FindListener;
 
 
 public class Introduce extends AppCompatActivity {
+    private String cot_shopname;
+    private String cot_shopadd;
     public final static String SER_KEY = "com.andy.ser";
     private String str_account;
     //接收传送过来的坐标
@@ -51,6 +54,7 @@ public class Introduce extends AppCompatActivity {
 
     private static final int THREAD_1 = 1;
     private static final int THREAD_2 = 2;
+    private static final int THREAD_3 = 3;
 
     private ProgressDialog mDialog;
     private List<MenuItemBean> menuItemBean = new ArrayList<>();
@@ -79,8 +83,6 @@ public class Introduce extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduce);
-        ListView listView = (ListView) findViewById(R.id.listView);
-
 
         getView();
         // 新页面接收数据
@@ -96,23 +98,38 @@ public class Introduce extends AppCompatActivity {
         endlat = latLot.getMarklat();
         endlot = latLot.getMarklot();
         str_account = latLot.getStr_account();
+        cot_shopname = latLot.getCot_shopname();
+        cot_shopadd = latLot.getCot_shopadd();
+
         System.out.println("这是传送的URL" + shopurl);
         System.out.println("这是传送的经纬度" + endlat);
         System.out.println("这是传送的经纬度" + endlot);
+        System.out.println("dianming" + cot_shopname);
 
-        mDialog = ProgressDialog.show(Introduce.this, "",
-                "Loading. Please wait...", true);
-
-        //开启线程
-        new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
 
         //设置店名和菜单名
-        tname.setText(shopname);
-        tad.setText(shopad);
+        if (cot_shopname != null) {
+            shopname = cot_shopname;
+            tname.setText(shopname);
+            tad.setText(shopad);
 
-         queryMenu();
+            mDialog = ProgressDialog.show(Introduce.this, "",
+                    "Loading. Please wait...", true);
 
+            //开启线程
+            new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
+            queryCtMenu();
+        } else {
+            tname.setText(shopname);
+            tad.setText(shopad);
 
+            mDialog = ProgressDialog.show(Introduce.this, "",
+                    "Loading. Please wait...", true);
+
+            //开启线程
+            new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
+            queryMenu();
+        }
 
 
         //btn_go的监听
@@ -135,12 +152,10 @@ public class Introduce extends AppCompatActivity {
             }
         });
 
-
         //收藏button监听
         btn_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Collection collection = new Collection();
                 collection.setCtShopName(shopname);
                 collection.setCtShopBest(shopBest);
@@ -150,21 +165,19 @@ public class Introduce extends AppCompatActivity {
 
                     @Override
                     public void done(String s, BmobException e) {
-                        System.out.println("成功");
+                        Toast.makeText(Introduce.this, "收藏成功", Toast.LENGTH_LONG).show();
                     }
                 });
-
             }
         });
-
-        //
+        //设置点赞button的点击效果
         btn_like.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
-                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     //重新设置按下时的背景图片
-                    ((ImageButton)v).setImageDrawable(getResources().getDrawable(R.drawable.red));}
+                    ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.drawable.red));
+                }
 //               else if(event.getAction() == MotionEvent.ACTION_UP){
 //                    //再修改为抬起时的正常图片
 //                    ((ImageButton)v).setImageDrawable(getResources().getDrawable(R.drawable.grray));
@@ -175,11 +188,42 @@ public class Introduce extends AppCompatActivity {
 
     }
 
+    private void queryCtMenu() {
+        //Bmob查询menu
+        final BmobQuery<Menu> menu = new BmobQuery<Menu>();
+        //用店铺id进行查询
+        menu.addWhereEqualTo("shopName", shopname);
+        menu.setLimit(10);
+        //执行查询方法
+        menu.findObjects(new FindListener<Menu>() {
+            @Override
+            public void done(List<Menu> list, BmobException e) {
+
+                if (e == null) {
+                    for (Menu menu : list) {
+                        menuName.add(menu.getMenuName());
+                        menuPrice.add(menu.getPrice());
+                    }
+
+                    for (i = 0; i < menuName.size(); i++) {
+                        menuItemBean.add(new MenuItemBean(R.drawable.ic_launcher, menuName.get(i).toString(), menuPrice.get(i).toString() + "元"));
+                    }
+                    Message message = Message.obtain();
+                    message.what = THREAD_2;
+                    message.obj = menuItemBean;
+                    mHandler.sendMessage(message);
+
+                }
+            }
+        });
+    }
+
+    //查询店铺菜单
     private void queryMenu() {
         //Bmob查询menu
         final BmobQuery<Menu> menu = new BmobQuery<Menu>();
         //用店铺id进行查询
-        menu.addWhereEqualTo("shopid", shopid);
+        menu.addWhereEqualTo("shopName", shopname);
         menu.setLimit(10);
         //执行查询方法
         menu.findObjects(new FindListener<Menu>() {
@@ -230,9 +274,17 @@ public class Introduce extends AppCompatActivity {
                     // 设置适配器
                     MyAdapter myAdapter = new MyAdapter(Introduce.this, menuItemBean);
                     listView.setAdapter(myAdapter);
+
                     // listPic.setImageBitmap((Bitmap) msg.obj);
                     break;
 
+//                case 3:
+//                    // 设置适配器
+//                    MyAdapter myAdapter = new MyAdapter(Introduce.this, menuItemBean);
+//                    listView.setAdapter(myAdapter);
+//
+//                    // listPic.setImageBitmap((Bitmap) msg.obj);
+//                    break;
 
             }
 

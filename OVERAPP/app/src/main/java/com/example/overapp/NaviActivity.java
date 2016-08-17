@@ -19,6 +19,7 @@ import com.baidu.navisdk.adapter.BaiduNaviManager.RoutePlanListener;
 import com.com.overapp.model.LatLot;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;

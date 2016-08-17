@@ -73,6 +73,8 @@ import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends ActionBarActivity implements CloudListener,
         OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
+    private String strlang="langye@163.com";
+    private String stralin="alin@163.com";
 
     //接收用户信息
     private String str_account;
@@ -83,8 +85,8 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     private double marklat;
     private double marklot;
 
-
     public static String TAG = "bmob";
+
     //传递店铺信息的参数
     private String straddress;
     private String strid;
@@ -92,6 +94,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     private String strshopname;
     private String strurl;
     private String strbest;
+
     // 存储当前定位信息
     public BDLocation currlocation = null;
 
@@ -102,13 +105,12 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
     // 存储LBS数据库的遍历结果
     List<CloudPoiInfo> lbs_poiList;
+
     // poi相关
     private PoiSearch mPoiSearch = null;
     private SuggestionSearch mSuggestionSearch = null;
 
-    /**
-     * 搜索关键字输入窗口
-     */
+    //搜索关键字输入窗口
     private AutoCompleteTextView keyWorldsView = null;
     private ArrayAdapter<String> sugAdapter = null;
     private int load_Index = 0;
@@ -117,27 +119,26 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     private Context context;
+
     // 定位相关
     private LocationClient mLocationClient;
     private MyLocationListener mLocationListener;
     private boolean isFirstIn = true;
     private double mLatitude;
     private double mLongtitude;
-
-    LatLng mCenterlLatLng = new LatLng(mLatitude, mLongtitude);
+//    LatLng mCenterlLatLng = new LatLng(mLatitude, mLongtitude);
+// 地图当前状态
+//private MapStatus mMapStatus;
+//    // 地图将要变化成的状态
+//    private MapStatusUpdate mMapStatusUpdate;
+//    // 当前经纬度坐标
+//    private LatLng mCurrentLatLng;
 
     // 自定义定位图标
     private BitmapDescriptor mIconLocation;
     private float mCurrentX;
     private com.baidu.mapapi.map.MyLocationConfiguration.LocationMode mLocationMode;
     private MyOrientationListener myOrientationListener;
-
-    // 地图当前状态
-    private MapStatus mMapStatus;
-    // 地图将要变化成的状态
-    private MapStatusUpdate mMapStatusUpdate;
-    // 当前经纬度坐标
-    private LatLng mCurrentLatLng;
 
     // LBS检索相关
     private static final String LTAG = MainActivity.class.getSimpleName();
@@ -147,18 +148,28 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this;
-//接收用户信息
+        //接收用户信息
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         str_account = latLot.getStr_account();
         str_psd = latLot.getStr_psd();
         System.out.println("传送的用户ID" + str_account);
-
 
         //初始化百度地图SDK
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         CloudManager.getInstance().init(MainActivity.this);
 
+        // 获取地图控件引用
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
+        // 初始化覆盖物
+        initOverlay();
+        // 初始化定位
+        initLocation();
+
+        if（str_account==）{
+
+        }
 
         // 初始化搜索模块，注册搜索事件监听
         mPoiSearch = PoiSearch.newInstance();
@@ -169,15 +180,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         sugAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line);
         keyWorldsView.setAdapter(sugAdapter);
 
-        // 获取地图控件引用
-        mMapView = (MapView) findViewById(R.id.bmapView);
-        mBaiduMap = mMapView.getMap();
 
-
-        // 初始化覆盖物
-        initOverlay();
-        // 初始化定位
-        initLocation();
         /**
          * marker点击事件
          */
@@ -220,7 +223,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                                 strshopname = shop.getShopName();
                                 strurl = shop.getShopUrl();
                                 strbest = shop.getTheBest();
-                                System.out.println("推荐" + strbest);
                             }
                         }
                         builder.setMessage(strshopname);
@@ -228,24 +230,22 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                     }
                 });
 
-                Button button = new Button(getApplicationContext());
-                button.setBackgroundResource(R.drawable.markselector);
-                button.setFocusable(true);
+                Button button_search = new Button(getApplicationContext());
+                button_search.setBackgroundResource(R.drawable.markselector);
+                button_search.setFocusable(true);
                 //GO button的监听
-                button.setOnClickListener(new View.OnClickListener() {
+                button_search.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-
                     }
                 });
+
                 //InfoWindow的监听
                 OnInfoWindowClickListener oinfolistener = null;
                 oinfolistener = new OnInfoWindowClickListener() {
                     public void onInfoWindowClick() {
-
                         // 点击button跳转到导航页面
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, Introduce.class);
-
                         // 用Bundle携带数据
                         Bundle bundle = new Bundle();
                         // 传递店铺信息
@@ -261,14 +261,13 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         latlot.setMarklot(marklot);
                         latlot.setStr_account(str_account);
                         bundle.putSerializable(SER_KEY, latlot);
-
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
                 };
                 LatLng ll = marker.getPosition();
                 mInfoWindow = new InfoWindow(BitmapDescriptorFactory
-                        .fromView(button), ll, -50, oinfolistener);
+                        .fromView(button_search), ll, -50, oinfolistener);
                 mBaiduMap.showInfoWindow(mInfoWindow);
                 return true;
 
@@ -403,16 +402,14 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, MeActivity.class);
 
-                // 用Bundle携带数据
+                //将用户数据传输到个人中心
                 Bundle bundle = new Bundle();
                 LatLot latlot = new LatLot();
                 latlot.setStr_account(str_account);
                 latlot.setStr_psd(str_psd);
                 bundle.putSerializable(SER_KEY, latlot);
-
                 intent.putExtras(bundle);
                 startActivity(intent);
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -456,9 +453,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         .newLatLngZoom(ll, 17);
                 // 设置地图中心点以及缩放级别
                 mBaiduMap.animateMapStatus(u);
-
-                Toast.makeText(context, location.getAddrStr(),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, location.getAddrStr(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -487,14 +482,14 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+        //结束
         mMapView.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+        //恢复
         mMapView.onResume();
     }
 
@@ -525,7 +520,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
      */
     @Override
     public void onGetDetailSearchResult(DetailSearchResult arg0, int arg1) {
-
     }
 
     @Override
@@ -617,7 +611,11 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         }
     }
 
-    //Poi检索的两个方法
+    /**
+     * 实现poi搜索的两个方法，获取回调信息
+     *
+     * @param
+     */
     public void onGetPoiDetailResult(PoiDetailResult result) {
         if (result.error != SearchResult.ERRORNO.NO_ERROR) {
             Toast.makeText(MainActivity.this, "抱歉，未找到结果", Toast.LENGTH_SHORT)

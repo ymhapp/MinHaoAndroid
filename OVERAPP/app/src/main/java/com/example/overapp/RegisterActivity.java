@@ -33,14 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
         // 新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
 
-        //  getview();
-        mregister = (Button) findViewById(R.id.register);
-        macccount = (AutoCompleteTextView) findViewById(R.id.account);
-        mpsd = (EditText) findViewById(R.id.password);
-        complete_psd = (EditText) findViewById(R.id.com_password);
-        mnickname = (EditText) findViewById(R.id.nickname);
-
-
+        getview();
+        //注册button的监听
         mregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,37 +44,35 @@ public class RegisterActivity extends AppCompatActivity {
                 str_compsd = complete_psd.getText().toString();
                 str_nickname = mnickname.getText().toString();
 
-                System.out.println("account:" + str_account);
-                System.out.println("psd:" + str_compsd);
-                System.out.println("compsd:" + str_password);
-
                 if (!str_compsd.equals(str_password)) {
                     Toast.makeText(RegisterActivity.this, "注册有误，两次输入密码不一致", Toast.LENGTH_LONG).show();
 
-                }else  if(str_account.equals("")||str_password.equals("")||str_nickname.equals("")){
+                } else if (str_account.equals("") || str_password.equals("") || str_nickname.equals("")) {
                     Toast.makeText(RegisterActivity.this, "不能为为空，请全部填写", Toast.LENGTH_LONG).show();
+                } else {
+                    //上传到Bmob
+                    User user = new User();
+                    user.setUserAccount(str_account);
+                    user.setUserPassWord(str_password);
+                    user.setUserNickName(str_nickname);
+                    user.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            System.out.println("注册成功");
+                        }
+                    });
                 }
-                else {
-                //上传到Bmob
-                User user = new User();
-                user.setUserAccount(str_account);
-                user.setUserPassWord(str_password);
-                user.setUserNickName(str_nickname);
-                user.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        System.out.println("注册成功");
-                    }
-                });
-            }
             }
         });
 
     }
 
-
     private void getview() {
-
+        mregister = (Button) findViewById(R.id.register);
+        macccount = (AutoCompleteTextView) findViewById(R.id.account);
+        mpsd = (EditText) findViewById(R.id.password);
+        complete_psd = (EditText) findViewById(R.id.com_password);
+        mnickname = (EditText) findViewById(R.id.nickname);
     }
 
 

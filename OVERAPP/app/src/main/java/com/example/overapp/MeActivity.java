@@ -28,6 +28,7 @@ import com.com.overapp.model.MyAdapter;
 import com.com.overapp.model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -36,7 +37,8 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class MeActivity extends AppCompatActivity {
-
+    private String str_shopname;
+    private String str_shopadd;
     private String cor_obj;
 
     //修改后的用户昵称
@@ -129,20 +131,33 @@ public class MeActivity extends AppCompatActivity {
                     for (int i = 0; i < ctbestList.size(); i++) {
                         collectionItemBeanList.add(new CollectionItemBean(ctnameList.get(i).toString(),
                                 ctaddList.get(i).toString(), ctbestList.get(i).toString()));
+
                     }
                     CollectionAdapter collectionAdapter = new CollectionAdapter(MeActivity.this, collectionItemBeanList);
                     ctlistview.setAdapter(collectionAdapter);
 
+                    //点击item的监听
                     ctlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//                            HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
+//                            Toast.makeText(view.getContext(), map.get("itemName"),
+//                                    Toast.LENGTH_SHORT).show();
+
+                            for (int i = 0; i < ctbestList.size(); i++) {
+                                str_shopname = ctnameList.get(position).toString();
+                                str_shopadd = ctaddList.get(position).toString();
+                                System.out.println("item:" + str_shopname);
+                            }
                             // 点击button跳转到导航页面
                             Intent intent = new Intent();
                             intent.setClass(MeActivity.this, Introduce.class);
-//                                    // 用Bundle携带数据
+                            // 用Bundle携带数据
                             Bundle bundle = new Bundle();
                             LatLot latlot = new LatLot();
-                            latlot.setStr_account(str_account);
+                            latlot.setCot_shopname(str_shopname);
+                            latlot.setCot_shopadd(str_shopadd);
                             bundle.putSerializable(SER_KEY, latlot);
                             intent.putExtras(bundle);
                             startActivity(intent);
