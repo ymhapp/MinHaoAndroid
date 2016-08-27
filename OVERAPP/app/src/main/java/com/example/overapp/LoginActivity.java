@@ -2,6 +2,7 @@ package com.example.overapp;
 
 import android.content.Intent;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +23,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private String strlang = "langye@163.com";
+    private String stralin = "alin@163.com";
     //传递选中的目的地
     public final static String SER_KEY = "com.andy.ser";
     private String login_account;
@@ -53,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                 login_account = mlogin_account.getText().toString();
                 login_psd = mlogin_psd.getText().toString();
                 System.out.println("信息" + login_account);
-                ;
+
                 //查询用户的登录信息并进行验证
                 final BmobQuery<User> user = new BmobQuery<User>();
                 user.addWhereEqualTo("userAccount", login_account);
@@ -65,8 +69,9 @@ public class LoginActivity extends AppCompatActivity {
                             for (User user : list) {
                                 bm_psd = user.getUserPassWord();
                             }
-                            if (bm_psd.equals(login_psd)) {
-                                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
+                            if (bm_psd.equals(login_psd)&&login_account.equals(strlang)) {
+                                Toast.makeText(LoginActivity.this, "VIP-朗爷登录成功", Toast.LENGTH_LONG).show();
+
                                 Intent intent = new Intent();
                                 intent.setClass(LoginActivity.this, MainActivity.class);
                                 // 将用户信息传输到首页
@@ -78,7 +83,24 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 finish();
-                            } else {
+                            } else if(bm_psd.equals(login_psd)&&login_account.equals(stralin)){
+                                Toast.makeText(LoginActivity.this, "VIP-alin登录成功", Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent();
+                                intent.setClass(LoginActivity.this, MainActivity.class);
+                                // 将用户信息传输到首页
+                                Bundle bundle = new Bundle();
+                                LatLot latlot = new LatLot();
+                                latlot.setStr_account(login_account);
+                                latlot.setStr_psd(login_psd);
+                                bundle.putSerializable(SER_KEY, latlot);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                finish();
+                            }
+
+
+                            else {
                                 Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
                             }
                         } else {

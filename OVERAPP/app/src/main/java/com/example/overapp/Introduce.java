@@ -75,7 +75,6 @@ public class Introduce extends AppCompatActivity {
     private String shopurl;
     private String shopad;
     private String price;
-    private String shopid;
     private String shopname;
     private String shopBest;
 
@@ -88,7 +87,7 @@ public class Introduce extends AppCompatActivity {
         // 新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
         // 接收店铺ID
-        shopid = bundle.getString("shopid");
+
         shopad = bundle.getString("shopad");
         shopname = bundle.getString("shopname");
         shopurl = bundle.getString("shopurl");

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,11 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class MeActivity extends AppCompatActivity {
+    private String strlang = "langye@163.com";
+    private String stralin = "alin@163.com";
+
+
+    private ImageButton imabtn;
     private String str_shopname;
     private String str_shopadd;
     private String cor_obj;
@@ -72,6 +78,25 @@ public class MeActivity extends AppCompatActivity {
         queryCollectionOBJ();
         queryNmae();
         queryCollection();
+
+        imabtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (str_account.equals(strlang)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
+                    builder.setTitle("朗爷你好哦");
+                    builder.setMessage("我翻来你开台唔洗二缺二");
+                    builder.create().show();
+                } else if (str_account.equals(stralin)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
+                    builder.setTitle("alin你好哦");
+                    builder.setMessage("我翻来就有人奶你去食鱼片粥咯");
+                    builder.create().show();
+                }
+
+            }
+        });
+
 
         //btn_correct的监听
         mcorrect.setOnClickListener(new View.OnClickListener() {
@@ -260,6 +285,7 @@ public class MeActivity extends AppCompatActivity {
         mcorrect = (Button) findViewById(R.id.btn_correct);
         ctlistview = (ListView) findViewById(R.id.collectionlist);
         musernickname = (TextView) findViewById(R.id.usernickname);
+        imabtn = (ImageButton) findViewById(R.id.userpic);
     }
 
 

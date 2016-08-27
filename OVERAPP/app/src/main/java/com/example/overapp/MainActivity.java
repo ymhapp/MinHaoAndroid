@@ -73,8 +73,8 @@ import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends ActionBarActivity implements CloudListener,
         OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
-    private String strlang="langye@163.com";
-    private String stralin="alin@163.com";
+    private String strlang = "langye@163.com";
+    private String stralin = "alin@163.com";
 
     //接收用户信息
     private String str_account;
@@ -89,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
     //传递店铺信息的参数
     private String straddress;
-    private String strid;
+
     private String markAdress;
     private String strshopname;
     private String strurl;
@@ -162,14 +162,13 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         // 获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
+
         // 初始化覆盖物
         initOverlay();
         // 初始化定位
         initLocation();
 
-        if（str_account==）{
 
-        }
 
         // 初始化搜索模块，注册搜索事件监听
         mPoiSearch = PoiSearch.newInstance();
@@ -209,7 +208,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                 final BmobQuery<Shop> shopad = new BmobQuery<Shop>();
                 //查询地址与marker相同的店铺
                 shopad.addWhereEqualTo("address", cpi.address);
-                shopad.setLimit(1);
+                shopad.setLimit(10);
                 //执行查询方法
                 shopad.findObjects(new FindListener<Shop>() {
                     @Override
@@ -218,11 +217,11 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         builder.setTitle("店铺名称");
                         if (e == null && list.size() != 0) {
                             for (Shop shop : list) {
-                                straddress = shop.getAddress();
-                                strid = shop.getObjectId();
+                                    straddress = shop.getAddress();
                                 strshopname = shop.getShopName();
                                 strurl = shop.getShopUrl();
                                 strbest = shop.getTheBest();
+                                System.out.println("店名"+strshopname);
                             }
                         }
                         builder.setMessage(strshopname);
@@ -249,7 +248,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         // 用Bundle携带数据
                         Bundle bundle = new Bundle();
                         // 传递店铺信息
-                        bundle.putString("shopid", strid);
+
                         bundle.putString("shopname", strshopname);
                         bundle.putString("shopad", straddress);
                         bundle.putString("shopurl", strurl);

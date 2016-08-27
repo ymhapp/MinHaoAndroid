@@ -2,45 +2,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e5e5e5"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context="com.example.overapp.RegisterActivity">
-<AutoCompleteTextView
-    android:id="@+id/account"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:hint="账号"
-    android:inputType="textEmailAddress"/>
 
+    <AutoCompleteTextView
+        android:id="@+id/account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:hint="账号"
+        android:inputType="textEmailAddress"
+        android:textSize="22dp" />
 
 
     <EditText
         android:id="@+id/password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="密码" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="密码"
+        android:textSize="22dp" />
 
 
     <EditText
         android:id="@+id/com_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="重复密码" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="重复密码"
+        android:textSize="22dp" />
 
 
     <EditText
         android:id="@+id/nickname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="昵称" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="昵称"
+        android:textSize="22dp" />
 
 
     <Button
         android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="16dp"
+        android:background="#ff8400"
         android:text="注册"
+        android:textSize="22dp"
         android:textStyle="bold" />
 
 </LinearLayout>

@@ -104,7 +104,9 @@
             android:name=".MeActivity"
             android:label="@string/title_activity_me"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterActivity"
+            android:label="请输入个人信息"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
