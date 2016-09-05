@@ -1,6 +1,7 @@
 package com.example.overapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -169,7 +170,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         initLocation();
 
 
-
         // 初始化搜索模块，注册搜索事件监听
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
@@ -208,7 +208,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                 final BmobQuery<Shop> shopad = new BmobQuery<Shop>();
                 //查询地址与marker相同的店铺
                 shopad.addWhereEqualTo("address", cpi.address);
-                shopad.setLimit(10);
+                shopad.setLimit(1);
                 //执行查询方法
                 shopad.findObjects(new FindListener<Shop>() {
                     @Override
@@ -217,57 +217,88 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         builder.setTitle("店铺名称");
                         if (e == null && list.size() != 0) {
                             for (Shop shop : list) {
-                                    straddress = shop.getAddress();
+                                straddress = shop.getAddress();
                                 strshopname = shop.getShopName();
                                 strurl = shop.getShopUrl();
                                 strbest = shop.getTheBest();
-                                System.out.println("店名"+strshopname);
+                                System.out.println("店名" + strshopname);
                             }
                         }
                         builder.setMessage(strshopname);
+                        builder.setPositiveButton("详情", new DialogInterface.OnClickListener() { //设置确定按钮
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //点击button跳转到导航页面
+                                Intent intent = new Intent();
+                                intent.setClass(MainActivity.this, Introduce.class);
+                                // 用Bundle携带数据
+                                Bundle bundle = new Bundle();
+                                // 传递店铺信息
+                                bundle.putString("shopname", strshopname);
+                                bundle.putString("shopad", straddress);
+                                bundle.putString("shopurl", strurl);
+                                bundle.putString("shopbest", strbest);
+
+                                //传递点击的Marker坐标
+                                LatLot latlot = new LatLot();
+                                latlot.setMarklat(marklat);
+                                latlot.setMarklot(marklot);
+                                latlot.setStr_account(str_account);
+                                bundle.putSerializable(SER_KEY, latlot);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+
+                            }
+                        });
+
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
                         builder.create().show();
                     }
                 });
 
-                Button button_search = new Button(getApplicationContext());
-                button_search.setBackgroundResource(R.drawable.markselector);
-                button_search.setFocusable(true);
-                //GO button的监听
-                button_search.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                    }
-                });
-
-                //InfoWindow的监听
-                OnInfoWindowClickListener oinfolistener = null;
-                oinfolistener = new OnInfoWindowClickListener() {
-                    public void onInfoWindowClick() {
-                        // 点击button跳转到导航页面
-                        Intent intent = new Intent();
-                        intent.setClass(MainActivity.this, Introduce.class);
-                        // 用Bundle携带数据
-                        Bundle bundle = new Bundle();
-                        // 传递店铺信息
-
-                        bundle.putString("shopname", strshopname);
-                        bundle.putString("shopad", straddress);
-                        bundle.putString("shopurl", strurl);
-                        bundle.putString("shopbest", strbest);
-
-                        //传递点击的Marker坐标
-                        LatLot latlot = new LatLot();
-                        latlot.setMarklat(marklat);
-                        latlot.setMarklot(marklot);
-                        latlot.setStr_account(str_account);
-                        bundle.putSerializable(SER_KEY, latlot);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                };
-                LatLng ll = marker.getPosition();
-                mInfoWindow = new InfoWindow(BitmapDescriptorFactory
-                        .fromView(button_search), ll, -50, oinfolistener);
-                mBaiduMap.showInfoWindow(mInfoWindow);
+//                Button button_search = new Button(getApplicationContext());
+//                button_search.setBackgroundResource(R.drawable.markselector);
+//                button_search.setFocusable(true);
+//                //GO button的监听
+//                button_search.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View v) {
+//                    }
+//                });
+//
+//                //InfoWindow的监听
+//                OnInfoWindowClickListener oinfolistener = null;
+//                oinfolistener = new OnInfoWindowClickListener() {
+//                    public void onInfoWindowClick() {
+//                        // 点击button跳转到导航页面
+//                        Intent intent = new Intent();
+//                        intent.setClass(MainActivity.this, Introduce.class);
+//                        // 用Bundle携带数据
+//                        Bundle bundle = new Bundle();
+//                        // 传递店铺信息
+//                        bundle.putString("shopname", strshopname);
+//                        bundle.putString("shopad", straddress);
+//                        bundle.putString("shopurl", strurl);
+//                        bundle.putString("shopbest", strbest);
+//
+//                        //传递点击的Marker坐标
+//                        LatLot latlot = new LatLot();
+//                        latlot.setMarklat(marklat);
+//                        latlot.setMarklot(marklot);
+//                        latlot.setStr_account(str_account);
+//                        bundle.putSerializable(SER_KEY, latlot);
+//                        intent.putExtras(bundle);
+//                        startActivity(intent);
+//                    }
+//                };
+//                LatLng ll = marker.getPosition();
+//                mInfoWindow = new InfoWindow(BitmapDescriptorFactory
+//                        .fromView(button_search), ll, -50, oinfolistener);
+//                mBaiduMap.showInfoWindow(mInfoWindow);
                 return true;
 
             }

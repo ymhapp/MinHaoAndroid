@@ -79,24 +79,6 @@ public class MeActivity extends AppCompatActivity {
         queryNmae();
         queryCollection();
 
-        imabtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (str_account.equals(strlang)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
-                    builder.setTitle("朗爷你好哦");
-                    builder.setMessage("我翻来你开台唔洗二缺二");
-                    builder.create().show();
-                } else if (str_account.equals(stralin)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
-                    builder.setTitle("alin你好哦");
-                    builder.setMessage("我翻来就有人奶你去食鱼片粥咯");
-                    builder.create().show();
-                }
-
-            }
-        });
-
 
         //btn_correct的监听
         mcorrect.setOnClickListener(new View.OnClickListener() {
@@ -165,11 +147,6 @@ public class MeActivity extends AppCompatActivity {
                     ctlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-//                            HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
-//                            Toast.makeText(view.getContext(), map.get("itemName"),
-//                                    Toast.LENGTH_SHORT).show();
-
                             for (int i = 0; i < ctbestList.size(); i++) {
                                 str_shopname = ctnameList.get(position).toString();
                                 str_shopadd = ctaddList.get(position).toString();

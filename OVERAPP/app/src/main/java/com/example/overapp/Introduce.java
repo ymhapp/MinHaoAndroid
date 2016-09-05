@@ -86,8 +86,7 @@ public class Introduce extends AppCompatActivity {
         getView();
         // 新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
-        // 接收店铺ID
-
+        // 接收店铺信息
         shopad = bundle.getString("shopad");
         shopname = bundle.getString("shopname");
         shopurl = bundle.getString("shopurl");
@@ -108,7 +107,9 @@ public class Introduce extends AppCompatActivity {
 
         //设置店名和菜单名
         if (cot_shopname != null) {
+            //如果收藏list有店铺就将店铺信息赋值给shopname,shopadd
             shopname = cot_shopname;
+            shopad = cot_shopadd;
             tname.setText(shopname);
             tad.setText(shopad);
 
@@ -117,7 +118,7 @@ public class Introduce extends AppCompatActivity {
 
             //开启线程
             new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
-            queryCtMenu();
+            queryMenu();
         } else {
             tname.setText(shopname);
             tad.setText(shopad);
@@ -161,7 +162,6 @@ public class Introduce extends AppCompatActivity {
                 collection.setCtShopadd(shopad);
                 collection.setUserAccount(str_account);
                 collection.save(new SaveListener<String>() {
-
                     @Override
                     public void done(String s, BmobException e) {
                         Toast.makeText(Introduce.this, "收藏成功", Toast.LENGTH_LONG).show();
@@ -187,35 +187,35 @@ public class Introduce extends AppCompatActivity {
 
     }
 
-    private void queryCtMenu() {
-        //Bmob查询menu
-        final BmobQuery<Menu> menu = new BmobQuery<Menu>();
-        //用店铺id进行查询
-        menu.addWhereEqualTo("shopName", shopname);
-        menu.setLimit(10);
-        //执行查询方法
-        menu.findObjects(new FindListener<Menu>() {
-            @Override
-            public void done(List<Menu> list, BmobException e) {
-
-                if (e == null) {
-                    for (Menu menu : list) {
-                        menuName.add(menu.getMenuName());
-                        menuPrice.add(menu.getPrice());
-                    }
-
-                    for (i = 0; i < menuName.size(); i++) {
-                        menuItemBean.add(new MenuItemBean(R.drawable.ic_launcher, menuName.get(i).toString(), menuPrice.get(i).toString() + "元"));
-                    }
-                    Message message = Message.obtain();
-                    message.what = THREAD_2;
-                    message.obj = menuItemBean;
-                    mHandler.sendMessage(message);
-
-                }
-            }
-        });
-    }
+//    private void queryCtMenu() {
+//        //Bmob查询menu
+//        final BmobQuery<Menu> menu = new BmobQuery<Menu>();
+//        //用店铺id进行查询
+//        menu.addWhereEqualTo("shopName", shopname);
+//        menu.setLimit(10);
+//        //执行查询方法
+//        menu.findObjects(new FindListener<Menu>() {
+//            @Override
+//            public void done(List<Menu> list, BmobException e) {
+//
+//                if (e == null) {
+//                    for (Menu menu : list) {
+//                        menuName.add(menu.getMenuName());
+//                        menuPrice.add(menu.getPrice());
+//                    }
+//
+//                    for (i = 0; i < menuName.size(); i++) {
+//                        menuItemBean.add(new MenuItemBean(R.drawable.ic_launcher, menuName.get(i).toString(), menuPrice.get(i).toString() + "元"));
+//                    }
+//                    Message message = Message.obtain();
+//                    message.what = THREAD_2;
+//                    message.obj = menuItemBean;
+//                    mHandler.sendMessage(message);
+//
+//                }
+//            }
+//        });
+//    }
 
     //查询店铺菜单
     private void queryMenu() {

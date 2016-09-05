@@ -48,7 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         getView();
+        //设置button的透明度
         mlogin.getBackground().setAlpha(100);
+        mregister.getBackground().setAlpha(0);
         //登录button的监听
         mlogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                                 bm_psd = user.getUserPassWord();
                             }
                             if (bm_psd.equals(login_psd)&&login_account.equals(strlang)) {
-                                Toast.makeText(LoginActivity.this, "VIP-朗爷登录成功", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent();
                                 intent.setClass(LoginActivity.this, MainActivity.class);
@@ -84,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else if(bm_psd.equals(login_psd)&&login_account.equals(stralin)){
-                                Toast.makeText(LoginActivity.this, "VIP-alin登录成功", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent();
                                 intent.setClass(LoginActivity.this, MainActivity.class);
@@ -98,8 +100,6 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             }
-
-
                             else {
                                 Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
                             }

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.com.overapp.model.LatLot;
 import com.com.overapp.model.User;
 
 import cn.bmob.v3.exception.BmobException;
@@ -51,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (str_account.equals("") || str_password.equals("") || str_nickname.equals("")) {
                     Toast.makeText(RegisterActivity.this, "不能为为空，请全部填写", Toast.LENGTH_LONG).show();
                 } else {
-                    //上传到Bmob
+                    //注册成功，上传到Bmob
                     User user = new User();
                     user.setUserAccount(str_account);
                     user.setUserPassWord(str_password);
@@ -59,7 +60,13 @@ public class RegisterActivity extends AppCompatActivity {
                     user.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
-                            System.out.println("注册成功");
+                            Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent();
+                            intent.setClass(RegisterActivity.this, LoginActivity.class);
+                            // 将用户信息传输到首页
+                            Bundle bundle = new Bundle();
+                            startActivity(intent);
+                            finish();
                         }
                     });
                 }

@@ -26,17 +26,18 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="账号"
-             android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
 
             <EditText
                 android:id="@+id/login_password"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="密码"
+                android:inputType="textPassword"
                 android:textColor="#ffffff"
-                android:textColorHint="#ffffff"/>
+                android:textColorHint="#ffffff" />
 
         </LinearLayout>
 
@@ -45,9 +46,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#01d3ae"
-            android:textColor="#FFFFFF"
             android:gravity="center"
             android:text="login"
+            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <Button
@@ -55,11 +56,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="90dp"
+
+            android:layout_marginTop="22dp"
             android:gravity="center"
-            android:text="注册"
+            android:text="我要注册"
             android:textColor="#01d3ae"
             android:textStyle="bold" />
     </LinearLayout>
