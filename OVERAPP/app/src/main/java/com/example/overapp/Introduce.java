@@ -48,8 +48,8 @@ public class Introduce extends AppCompatActivity {
     public final static String SER_KEY = "com.andy.ser";
     private String str_account;
     //接收传送过来的坐标
-    private double endlat;
-    private double endlot;
+    private double lbs_lat;
+    private double lbs_lot;
 
 
     private static final int THREAD_1 = 1;
@@ -93,15 +93,15 @@ public class Introduce extends AppCompatActivity {
         shopBest = bundle.getString("shopbest");
         //接收目的地坐标
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
-        endlat = latLot.getMarklat();
-        endlot = latLot.getMarklot();
+        lbs_lat = latLot.getLbs_latitude();
+        lbs_lot = latLot.getLbs_longitide();
         str_account = latLot.getStr_account();
         cot_shopname = latLot.getCot_shopname();
         cot_shopadd = latLot.getCot_shopadd();
 
         System.out.println("这是传送的URL" + shopurl);
-        System.out.println("这是传送的经纬度" + endlat);
-        System.out.println("这是传送的经纬度" + endlot);
+        System.out.println("这是传送的经纬度" + lbs_lat);
+        System.out.println("这是传送的经纬度" + lbs_lot);
         System.out.println("dianming" + cot_shopname);
 
 
@@ -143,9 +143,9 @@ public class Introduce extends AppCompatActivity {
                 // 用Bundle携带数据
                 Bundle bundle = new Bundle();
                 LatLot latlot = new LatLot();
-                latlot.setMarklat(endlat);
-                latlot.setMarklot(endlot);
-                latlot.setEndAdd(shopad);
+                latlot.setLbs_latitude(lbs_lat);
+                latlot.setLbs_longitide(lbs_lot);
+                latlot.setLbs_Add(shopad);
                 bundle.putSerializable(SER_KEY, latlot);
                 intent.putExtras(bundle);
                 startActivity(intent);

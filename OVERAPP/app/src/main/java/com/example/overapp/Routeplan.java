@@ -54,12 +54,15 @@ import com.overlayutil.WalkingRouteOverlay;
 
 public class Routeplan extends Activity implements OnGetRoutePlanResultListener {
     public final static String SER_KEY = "com.andy.ser";
+    private double poi_lat;
+    private double poi_lot;
+    private String poiAdd;
 
-    private double endlat;
-    private double endlot;
     //出发地与目的地的地址
+    private double lbs_lat;
+    private double lbs_lot;
     private String strartAdd = "23312312";
-    private String endAdd;
+    private String lbsAdd;
 
     private EditText startText;
     private EditText endText;
@@ -103,12 +106,18 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         Bundle bundle = this.getIntent().getExtras();
 
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
-        endlat = latLot.getMarklat();
-        endlot = latLot.getMarklot();
-        endAdd = latLot.getEndAdd();
-        System.out.println("这是传送的经纬度" + endlat);
-        System.out.println("这是传送的经纬度" + endlot);
-        System.out.println("这是传送的地址" + endAdd);
+        lbs_lat = latLot.getLbs_latitude();
+        lbs_lot = latLot.getLbs_longitide();
+        lbsAdd = latLot.getLbs_Add();
+        poi_lat = latLot.getPoi_latitude();
+        poi_lot = latLot.getPoi_longitude();
+        poiAdd = latLot.getPoi_Add();
+        System.out.println("这是Route传送的经纬度" + lbs_lat);
+        System.out.println("这是Route传送的经纬度" + lbs_lot);
+        System.out.println("这是传送的地址" + lbsAdd);
+        System.out.println("这是Route传送的poi经纬度" + poi_lat);
+        System.out.println("这是Route传送的poi经纬度" + poi_lot);
+        System.out.println("这是传送的poi地址" + poiAdd);
 
         this.context = this;
         CharSequence titleLable = "路线规划功能";
@@ -122,7 +131,13 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         initLocation();
         getView();
 
-        endText.setText(endAdd);
+        //
+        if (lbsAdd == null) {
+            endText.setText(poiAdd);
+        } else {
+            endText.setText(lbsAdd);
+        }
+
         mBtnPre.setVisibility(View.INVISIBLE);
         mBtnNext.setVisibility(View.INVISIBLE);
 
@@ -138,10 +153,12 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
                 // 将起点坐标与终点坐标传输到导航页面
                 Bundle bundle = new Bundle();
                 LatLot latlot = new LatLot();
-                latlot.setMarklat(endlat);
-                latlot.setMarklot(endlot);
-                latlot.setEndlat(mLatitude);
-                latlot.setEndlot(mLongtitude);
+                latlot.setLbs_latitude(lbs_lat);
+                latlot.setLbs_longitide(lbs_lot);
+                latlot.setLoc_latitude(mLatitude);
+                latlot.setLoc_longitude(mLongtitude);
+                latlot.setPoi_latitude(poi_lat);
+                latlot.setPoi_longitude(poi_lot);
                 bundle.putSerializable(SER_KEY, latlot);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -255,7 +272,7 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         String nodeTitle = null;
         Object step = route.getAllStep().get(nodeIndex);
 
-          if (step instanceof WalkingRouteLine.WalkingStep) {
+        if (step instanceof WalkingRouteLine.WalkingStep) {
             nodeLocation = ((WalkingRouteLine.WalkingStep) step).getEntrance()
                     .getLocation();
             nodeTitle = ((WalkingRouteLine.WalkingStep) step).getInstructions();
@@ -285,26 +302,6 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
 
     }
 
-//	/**
-//	 * 切换路线图标，刷新地图使其生效 注意： 起终点图标使用中心对齐.
-//	 */
-//	public void changeRouteIcon(View v) {
-//		if (routeOverlay == null) {
-//			return;
-//		}
-//		if (useDefaultIcon) {
-//			((Button) v).setText("自定义起终点图标");
-//			Toast.makeText(this, "将使用系统起终点图标", Toast.LENGTH_SHORT).show();
-//
-//		} else {
-//			((Button) v).setText("系统起终点图标");
-//			Toast.makeText(this, "将使用自定义起终点图标", Toast.LENGTH_SHORT).show();
-//
-//		}
-//		useDefaultIcon = !useDefaultIcon;
-//		routeOverlay.removeFromMap();
-//		routeOverlay.addToMap();
-//	}
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

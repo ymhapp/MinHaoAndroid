@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -74,6 +76,8 @@ import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends ActionBarActivity implements CloudListener,
         OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
+
+
     private String strlang = "langye@163.com";
     private String stralin = "alin@163.com";
 
@@ -83,8 +87,12 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
     //传递选中的目的地
     public final static String SER_KEY = "com.andy.ser";
-    private double marklat;
-    private double marklot;
+    private double lbs_lat;
+    private double lbs_lot;
+    private LatLng poilalot;
+    private String poiAdd;
+    private double poi_lat;
+    private double poi_lot;
 
     public static String TAG = "bmob";
 
@@ -99,10 +107,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     // 存储当前定位信息
     public BDLocation currlocation = null;
 
-    // MARKER
-    private InfoWindow mInfoWindow;
-    private BitmapDescriptor bitmap;
-    private RelativeLayout mMarkerLy;
 
     // 存储LBS数据库的遍历结果
     List<CloudPoiInfo> lbs_poiList;
@@ -127,15 +131,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     private boolean isFirstIn = true;
     private double mLatitude;
     private double mLongtitude;
-//    LatLng mCenterlLatLng = new LatLng(mLatitude, mLongtitude);
-// 地图当前状态
-//private MapStatus mMapStatus;
-//    // 地图将要变化成的状态
-//    private MapStatusUpdate mMapStatusUpdate;
-//    // 当前经纬度坐标
-//    private LatLng mCurrentLatLng;
 
-    // 自定义定位图标
     private BitmapDescriptor mIconLocation;
     private float mCurrentX;
     private com.baidu.mapapi.map.MyLocationConfiguration.LocationMode mLocationMode;
@@ -179,56 +175,90 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         sugAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line);
         keyWorldsView.setAdapter(sugAdapter);
 
-
         /**
          * marker点击事件
          */
         mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
             //点击marker
-            public boolean onMarkerClick(final Marker marker) {
+            public boolean onMarkerClick(Marker marker) {
+
                 // 获取marker的经纬度
                 LatLng position = marker.getPosition();
-                marklat = position.latitude;
-                marklot = position.longitude;
-                CloudPoiInfo cpi = null;
+                lbs_lat = position.latitude;
+                lbs_lot = position.longitude;
+                System.out.println(lbs_lat);
+                System.out.println(lbs_lot);
+
                 //遍历LBS中的marker
                 for (CloudPoiInfo cloudPoiInfo : lbs_poiList) {
-                    if (cloudPoiInfo.latitude == marklat && cloudPoiInfo.longitude == marklot) {
+                    CloudPoiInfo cpi = null;
+                    if (cloudPoiInfo.latitude == lbs_lat && cloudPoiInfo.longitude == lbs_lot) {
                         cpi = cloudPoiInfo;
                         Toast.makeText(MainActivity.this, cpi.address, Toast.LENGTH_LONG).show();
-                    }
-                }
-                if (cpi == null) {
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, Routeplan.class);
-                    startActivity(intent);
-                }
 
-                //  Bmob查询
-                final BmobQuery<Shop> shopad = new BmobQuery<Shop>();
-                //查询地址与marker相同的店铺
-                shopad.addWhereEqualTo("address", cpi.address);
-                shopad.setLimit(1);
-                //执行查询方法
-                shopad.findObjects(new FindListener<Shop>() {
-                    @Override
-                    public void done(List<Shop> list, BmobException e) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("店铺名称");
-                        if (e == null && list.size() != 0) {
-                            for (Shop shop : list) {
-                                straddress = shop.getAddress();
-                                strshopname = shop.getShopName();
-                                strurl = shop.getShopUrl();
-                                strbest = shop.getTheBest();
-                                System.out.println("店名" + strshopname);
-                            }
-                        }
-                        builder.setMessage(strshopname);
-                        builder.setPositiveButton("详情", new DialogInterface.OnClickListener() { //设置确定按钮
+                        //  Bmob查询
+                        final BmobQuery<Shop> shopad = new BmobQuery<Shop>();
+                        //查询地址与marker相同的店铺
+                        shopad.addWhereEqualTo("address", cpi.address);
+                        shopad.setLimit(1);
+                        //执行查询方法
+                        shopad.findObjects(new FindListener<Shop>() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //点击button跳转到导航页面
+                            public void done(List<Shop> list, BmobException e) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("店铺名称");
+                                if (e == null && list.size() != 0) {
+                                    for (Shop shop : list) {
+                                        straddress = shop.getAddress();
+                                        strshopname = shop.getShopName();
+                                        strurl = shop.getShopUrl();
+                                        strbest = shop.getTheBest();
+                                        System.out.println("店名" + strshopname);
+                                    }
+                                }
+                                builder.setMessage(strshopname);
+                                builder.setPositiveButton("详情", new DialogInterface.OnClickListener() { //设置确定按钮
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //点击button跳转到导航页面
+                                        Intent intent = new Intent();
+                                        intent.setClass(MainActivity.this, Introduce.class);
+                                        // 用Bundle携带数据
+                                        Bundle bundle = new Bundle();
+                                        // 传递店铺信息
+                                        bundle.putString("shopname", strshopname);
+                                        bundle.putString("shopad", straddress);
+                                        bundle.putString("shopurl", strurl);
+                                        bundle.putString("shopbest", strbest);
+
+                                        //传递点击的Marker坐标
+                                        LatLot latlot = new LatLot();
+                                        latlot.setLbs_latitude(lbs_lat);
+                                        latlot.setLbs_longitide(lbs_lot);
+                                        latlot.setStr_account(str_account);
+                                        bundle.putSerializable(SER_KEY, latlot);
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+
+                                    }
+                                });
+
+                                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.create().show();
+                            }
+                        });
+
+
+                        //InfoWindow的监听
+                        OnInfoWindowClickListener oinfolistener = null;
+                        oinfolistener = new OnInfoWindowClickListener() {
+                            public void onInfoWindowClick() {
+                                // 点击button跳转到导航页面
                                 Intent intent = new Intent();
                                 intent.setClass(MainActivity.this, Introduce.class);
                                 // 用Bundle携带数据
@@ -241,66 +271,17 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
                                 //传递点击的Marker坐标
                                 LatLot latlot = new LatLot();
-                                latlot.setMarklat(marklat);
-                                latlot.setMarklot(marklot);
-                                latlot.setStr_account(str_account);
+                                latlot.setLbs_latitude(lbs_lat);
+                                latlot.setLbs_longitide(lbs_lot);
+//                                latlot.setStr_account(str_account);
                                 bundle.putSerializable(SER_KEY, latlot);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
-
                             }
-                        });
-
-                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.create().show();
+                        };
                     }
-                });
-
-//                Button button_search = new Button(getApplicationContext());
-//                button_search.setBackgroundResource(R.drawable.markselector);
-//                button_search.setFocusable(true);
-//                //GO button的监听
-//                button_search.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View v) {
-//                    }
-//                });
-//
-//                //InfoWindow的监听
-//                OnInfoWindowClickListener oinfolistener = null;
-//                oinfolistener = new OnInfoWindowClickListener() {
-//                    public void onInfoWindowClick() {
-//                        // 点击button跳转到导航页面
-//                        Intent intent = new Intent();
-//                        intent.setClass(MainActivity.this, Introduce.class);
-//                        // 用Bundle携带数据
-//                        Bundle bundle = new Bundle();
-//                        // 传递店铺信息
-//                        bundle.putString("shopname", strshopname);
-//                        bundle.putString("shopad", straddress);
-//                        bundle.putString("shopurl", strurl);
-//                        bundle.putString("shopbest", strbest);
-//
-//                        //传递点击的Marker坐标
-//                        LatLot latlot = new LatLot();
-//                        latlot.setMarklat(marklat);
-//                        latlot.setMarklot(marklot);
-//                        latlot.setStr_account(str_account);
-//                        bundle.putSerializable(SER_KEY, latlot);
-//                        intent.putExtras(bundle);
-//                        startActivity(intent);
-//                    }
-//                };
-//                LatLng ll = marker.getPosition();
-//                mInfoWindow = new InfoWindow(BitmapDescriptorFactory
-//                        .fromView(button_search), ll, -50, oinfolistener);
-//                mBaiduMap.showInfoWindow(mInfoWindow);
+                }
                 return true;
-
             }
         });
 
@@ -332,6 +313,37 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         );
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            dialog();
+            return true;
+        }
+        return true;
+    }
+
+    protected void dialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("确定要退出吗?");
+        builder.setTitle("提示");
+        builder.setPositiveButton("确认",
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        //AccoutList.this.finish();
+                        //System.exit(1);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                });
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
 
     /**
      * 添加覆盖物
@@ -477,10 +489,10 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             if (isFirstIn) {
                 isFirstIn = false;
 
-                LatLng ll = new LatLng(location.getLatitude(),
+                LatLng mylocation = new LatLng(location.getLatitude(),
                         location.getLongitude());
                 MapStatusUpdate u = MapStatusUpdateFactory
-                        .newLatLngZoom(ll, 17);
+                        .newLatLngZoom(mylocation, 17);
                 // 设置地图中心点以及缩放级别
                 mBaiduMap.animateMapStatus(u);
                 Toast.makeText(context, location.getAddrStr(), Toast.LENGTH_SHORT).show();
@@ -654,6 +666,26 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             Toast.makeText(MainActivity.this,
                     result.getName() + ": " + result.getAddress(),
                     Toast.LENGTH_SHORT).show();
+            poiAdd = result.getAddress();
+            poilalot = result.getLocation();
+            poi_lat = poilalot.latitude;
+            poi_lot = poilalot.longitude;
+            // 点击poimarker跳转到导航页面
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, Routeplan.class);
+            // 将起点坐标与终点坐标传输到导航页面
+            Bundle bundle = new Bundle();
+            LatLot latlot = new LatLot();
+            latlot.setPoi_Add(poiAdd);
+            latlot.setPoi_latitude(poi_lat);
+            latlot.setPoi_longitude(poi_lot);
+            bundle.putSerializable(SER_KEY, latlot);
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+            System.out.println("poi地址" + poiAdd);
+            System.out.println("poi地址" + poi_lat);
+            System.out.println("poi地址" + poi_lot);
         }
     }
 

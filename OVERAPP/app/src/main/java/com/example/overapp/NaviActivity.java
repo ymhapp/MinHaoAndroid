@@ -37,11 +37,15 @@ public class NaviActivity extends Activity {
     public static List<Activity> activityList = new LinkedList<Activity>();
 
 
-    private Double startLongitude;
-    private Double startLatitude;
+    private double poilat;
+    private double poilot;
 
-    private Double endLongitude;
-    private Double endLatitude;
+
+    private double startLongitude;
+    private double startLatitude;
+
+    private double endLongitude;
+    private double endLatitude;
 
 
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
@@ -64,15 +68,27 @@ public class NaviActivity extends Activity {
         setContentView(R.layout.activity_navi);
 
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
-        startLatitude = latLot.getMarklat();
-        startLongitude = latLot.getMarklot();
-        endLatitude = latLot.getEndlat();
-        endLongitude = latLot.getMarklot();
+        startLatitude = latLot.getLoc_latitude();
+        startLongitude = latLot.getLoc_longitude();
+        endLatitude = latLot.getLbs_latitude();
+        endLongitude = latLot.getLbs_longitide();
+        poilat = latLot.getPoi_latitude();
+        poilot = latLot.getPoi_longitude();
 
         System.out.println("这是传送的终点经纬度" + endLongitude);
-        System.out.println("这是传送的起点经纬度" + endLatitude);
+        System.out.println("这是传送的终点经纬度" + endLatitude);
         System.out.println("这是传送的起点经纬度" + startLongitude);
-        System.out.println("这是传送的终点经纬度" + startLatitude);
+        System.out.println("这是传送的起点经纬度" + startLatitude);
+        System.out.println("这是传送的poi终点经纬度" + poilot+poilat);
+
+
+
+        if (endLatitude == 0.0) {
+            endLongitude = poilot;
+            endLatitude = poilat;
+            System.out.println("这是替换的终点经纬度" + endLongitude);
+            System.out.println("这是替换的起点经纬度" + endLatitude);
+        }
 
         mDb06ll = (Button) findViewById(R.id.gcjNaviBtn);
 
@@ -222,6 +238,7 @@ public class NaviActivity extends Activity {
         CoordinateType coType = CoordinateType.BD09LL;
         BNRoutePlanNode sNode = null;
         BNRoutePlanNode eNode = null;
+
 
 
         sNode = new BNRoutePlanNode(startLongitude, startLatitude, "出发地", null, coType);
