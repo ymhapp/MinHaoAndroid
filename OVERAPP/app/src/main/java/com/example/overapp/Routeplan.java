@@ -29,6 +29,11 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.route.BikingRouteLine;
 import com.baidu.mapapi.search.route.BikingRoutePlanOption;
 import com.baidu.mapapi.search.route.BikingRouteResult;
@@ -53,6 +58,12 @@ import com.overlayutil.TransitRouteOverlay;
 import com.overlayutil.WalkingRouteOverlay;
 
 public class Routeplan extends Activity implements OnGetRoutePlanResultListener {
+
+    GeoCoder geoSearch = null;
+    private double navi_end_lat;
+    private double navi_end_lot;
+
+
     public final static String SER_KEY = "com.andy.ser";
     private double poi_lat;
     private double poi_lot;
@@ -105,7 +116,7 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         // 新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
 
-        LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+        final LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         lbs_lat = latLot.getLbs_latitude();
         lbs_lot = latLot.getLbs_longitide();
         lbsAdd = latLot.getLbs_Add();
@@ -141,18 +152,55 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         mBtnPre.setVisibility(View.INVISIBLE);
         mBtnNext.setVisibility(View.INVISIBLE);
 
+
+        geoSearch = GeoCoder.newInstance();// 创建地理编码检索实例
+
+        // 设置地理编码检索监听者
+        geoSearch.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+                if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    Toast.makeText(Routeplan.this, "抱歉，未能找到结果", Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
+//                String strInfo = String.format("纬度：%f 经度：%f",
+//                        geoCodeResult.getLocation().latitudeE6 / 1e6,
+//                        geoCodeResult.getLocation().longitudeE6 / 1e6);
+
+                String dd = String.format("%f", geoCodeResult.getLocation().latitudeE6 / 1e6);
+                String d1 = String.format("%f", geoCodeResult.getLocation().longitudeE6 / 1e6);
+                navi_end_lat = Double.parseDouble(dd);
+                navi_end_lot = Double.parseDouble(d1);
+
+                System.out.println("ROUTE坐标" + navi_end_lat + navi_end_lot);
+//                Toast.makeText(Routeplan.this, "纬度" + strInfo + "经度" + strInfo, Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
+            }
+        });
+
+
         // 初始化搜索模块，注册事件监听
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);
         mbtnnavi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                geoSearch.geocode(new GeoCodeOption().city("").address(endText.getText().toString()));
                 // 点击button跳转到导航页面
                 Intent intent = new Intent();
                 intent.setClass(Routeplan.this, NaviActivity.class);
                 // 将起点坐标与终点坐标传输到导航页面
                 Bundle bundle = new Bundle();
                 LatLot latlot = new LatLot();
+                latlot.setEnd_navi_lat(navi_end_lat);
+                latlot.setEnd_navi_lot(navi_end_lot);
                 latlot.setLbs_latitude(lbs_lat);
                 latlot.setLbs_longitide(lbs_lot);
                 latlot.setLoc_latitude(mLatitude);

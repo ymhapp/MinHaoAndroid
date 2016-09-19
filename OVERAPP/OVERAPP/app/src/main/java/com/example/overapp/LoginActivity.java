@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private String strlang = "langye@163.com";
     private String stralin = "alin@163.com";
-    //传递用户信息
+    //传递选中的目的地
     public final static String SER_KEY = "com.andy.ser";
     private String login_account;
     private String login_psd;
@@ -71,7 +71,21 @@ public class LoginActivity extends AppCompatActivity {
                             for (User user : list) {
                                 bm_psd = user.getUserPassWord();
                             }
-                            if (bm_psd.equals(login_psd) && login_account.equals(strlang)) {
+                            if (bm_psd.equals(login_psd)&&login_account.equals(strlang)) {
+                                Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent();
+                                intent.setClass(LoginActivity.this, MainActivity.class);
+                                // 将用户信息传输到首页
+                                Bundle bundle = new Bundle();
+                                LatLot latlot = new LatLot();
+                                latlot.setStr_account(login_account);
+                                latlot.setStr_psd(login_psd);
+                                bundle.putSerializable(SER_KEY, latlot);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                finish();
+                            } else if(bm_psd.equals(login_psd)&&login_account.equals(stralin)){
                                 Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent();
@@ -86,37 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             }
-
-
-                            else if (bm_psd.equals(login_psd) && login_account.equals(stralin)) {
-                                Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, MainActivity.class);
-                                // 将用户信息传输到首页
-                                Bundle bundle = new Bundle();
-                                LatLot latlot = new LatLot();
-                                latlot.setStr_account(login_account);
-                                latlot.setStr_psd(login_psd);
-                                bundle.putSerializable(SER_KEY, latlot);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
-                            } else if (bm_psd.equals(login_psd)) {
-                                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, MainActivity.class);
-                                // 将用户信息传输到首页
-                                Bundle bundle = new Bundle();
-                                LatLot latlot = new LatLot();
-                                latlot.setStr_account(login_account);
-                                latlot.setStr_psd(login_psd);
-                                bundle.putSerializable(SER_KEY, latlot);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
-                            } else if(!bm_psd.equals(login_psd)){
+                            else {
                                 Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
                             }
                         } else {
