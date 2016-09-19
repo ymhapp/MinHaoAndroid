@@ -70,8 +70,10 @@ public class NaviActivity extends Activity {
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         startLatitude = latLot.getLoc_latitude();
         startLongitude = latLot.getLoc_longitude();
+
         endLatitude = latLot.getLbs_latitude();
         endLongitude = latLot.getLbs_longitide();
+
         poilat = latLot.getPoi_latitude();
         poilot = latLot.getPoi_longitude();
 
@@ -79,8 +81,7 @@ public class NaviActivity extends Activity {
         System.out.println("这是传送的终点经纬度" + endLatitude);
         System.out.println("这是传送的起点经纬度" + startLongitude);
         System.out.println("这是传送的起点经纬度" + startLatitude);
-        System.out.println("这是传送的poi终点经纬度" + poilot+poilat);
-
+        System.out.println("这是传送的poi终点经纬度" + poilot + poilat);
 
 
         if (endLatitude == 0.0) {
@@ -238,7 +239,6 @@ public class NaviActivity extends Activity {
         CoordinateType coType = CoordinateType.BD09LL;
         BNRoutePlanNode sNode = null;
         BNRoutePlanNode eNode = null;
-
 
 
         sNode = new BNRoutePlanNode(startLongitude, startLatitude, "出发地", null, coType);

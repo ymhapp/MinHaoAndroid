@@ -6,6 +6,10 @@ import java.io.Serializable;
  * Created by acer on 2016/8/11.
  */
 public class LatLot implements Serializable {
+    //路线规划输入框中的终点地址
+    private double end_navi_lat;
+    private double end_navi_lot;
+
     //poi搜索的经纬度坐标
     private String poi_Add;
     private double poi_latitude;
@@ -24,6 +28,22 @@ public class LatLot implements Serializable {
     private double lbs_longitide;
     private String lbs_Add;
     private static final long serialVersionUID = -7620435178023928252L;
+
+    public double getEnd_navi_lat() {
+        return end_navi_lat;
+    }
+
+    public void setEnd_navi_lat(double end_navi_lat) {
+        this.end_navi_lat = end_navi_lat;
+    }
+
+    public double getEnd_navi_lot() {
+        return end_navi_lot;
+    }
+
+    public void setEnd_navi_lot(double end_navi_lot) {
+        this.end_navi_lot = end_navi_lot;
+    }
 
     public String getPoi_Add() {
         return poi_Add;
