@@ -114,6 +114,7 @@
     <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="Bmob_Push_V1.0.0beta_20160627" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_cloud_v3_7_3" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_map_v3_7_3" level="project" />

@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,7 +61,7 @@ import com.overlayutil.DrivingRouteOverlay;
 import com.overlayutil.TransitRouteOverlay;
 import com.overlayutil.WalkingRouteOverlay;
 
-public class Routeplan extends Activity implements OnGetRoutePlanResultListener {
+public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResultListener {
 
     GeoCoder geoSearch = null;
     private double navi_end_lat;
@@ -130,6 +134,7 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         System.out.println("这是Route传送的poi经纬度" + poi_lot);
         System.out.println("这是传送的poi地址" + poiAdd);
 
+
         this.context = this;
         CharSequence titleLable = "路线规划功能";
         setTitle(titleLable);
@@ -142,13 +147,22 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
         initLocation();
         getView();
 
-        //
+        //取得ActionBar对象
+        ActionBar actionBar = getSupportActionBar();
+        //调用show方法，展示actionbar
+        actionBar.show();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("");
+
+
+        //判断地址是从lbs搜索传入还是poi搜索传入
         if (lbsAdd == null) {
             endText.setText(poiAdd);
         } else {
             endText.setText(lbsAdd);
         }
 
+        //控制路线站点
         mBtnPre.setVisibility(View.INVISIBLE);
         mBtnNext.setVisibility(View.INVISIBLE);
 
@@ -165,9 +179,7 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
                             .show();
                     return;
                 }
-//                String strInfo = String.format("纬度：%f 经度：%f",
-//                        geoCodeResult.getLocation().latitudeE6 / 1e6,
-//                        geoCodeResult.getLocation().longitudeE6 / 1e6);
+
 
                 String dd = String.format("%f", geoCodeResult.getLocation().latitudeE6 / 1e6);
                 String d1 = String.format("%f", geoCodeResult.getLocation().longitudeE6 / 1e6);
@@ -215,6 +227,20 @@ public class Routeplan extends Activity implements OnGetRoutePlanResultListener 
 
 
     }
+
+    //点击返回键推出
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void getView() {
         mbtnnavi = (Button) findViewById(R.id.btn_navi);

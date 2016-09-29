@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -105,6 +107,17 @@ public class Introduce extends AppCompatActivity {
         System.out.println("dianming" + cot_shopname);
 
 
+        //取得ActionBar对象
+        ActionBar actionBar = getSupportActionBar();
+//        //调用hide方法，隐藏actionbar
+//        actionBar.hide();
+        //调用show方法，展示actionbar
+        actionBar.show();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setTitle("");
+
+
         //设置店名和菜单名
         if (cot_shopname != null) {
             //如果收藏list有店铺就将店铺信息赋值给shopname,shopadd
@@ -187,35 +200,6 @@ public class Introduce extends AppCompatActivity {
 
     }
 
-//    private void queryCtMenu() {
-//        //Bmob查询menu
-//        final BmobQuery<Menu> menu = new BmobQuery<Menu>();
-//        //用店铺id进行查询
-//        menu.addWhereEqualTo("shopName", shopname);
-//        menu.setLimit(10);
-//        //执行查询方法
-//        menu.findObjects(new FindListener<Menu>() {
-//            @Override
-//            public void done(List<Menu> list, BmobException e) {
-//
-//                if (e == null) {
-//                    for (Menu menu : list) {
-//                        menuName.add(menu.getMenuName());
-//                        menuPrice.add(menu.getPrice());
-//                    }
-//
-//                    for (i = 0; i < menuName.size(); i++) {
-//                        menuItemBean.add(new MenuItemBean(R.drawable.ic_launcher, menuName.get(i).toString(), menuPrice.get(i).toString() + "元"));
-//                    }
-//                    Message message = Message.obtain();
-//                    message.what = THREAD_2;
-//                    message.obj = menuItemBean;
-//                    mHandler.sendMessage(message);
-//
-//                }
-//            }
-//        });
-//    }
 
     //查询店铺菜单
     private void queryMenu() {
@@ -246,6 +230,19 @@ public class Introduce extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    //点击返回键推出
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

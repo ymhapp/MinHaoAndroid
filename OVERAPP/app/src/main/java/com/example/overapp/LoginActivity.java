@@ -2,7 +2,7 @@ package com.example.overapp;
 
 import android.content.Intent;
 
-import android.support.v7.app.AlertDialog;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +17,13 @@ import com.com.overapp.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
+
+
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -36,14 +42,19 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mlogin_psd;
     private Button mlogin;
     private Button mregister;
+    BmobPushManager bmobPushManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Bmob
-        //第一：默认初始化
-        Bmob.initialize(this, "37167ef9a0a7b5611191400982366aa9");
 
+
+        //初始化BmobSDK
+        Bmob.initialize(this, "37167ef9a0a7b5611191400982366aa9");
+        // 使用推送服务时的初始化操作
+        BmobInstallation.getCurrentInstallation().save();
+        // 启动推送服务
+        BmobPush.startWork(this);
 
         setContentView(R.layout.activity_login);
 
@@ -85,10 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 finish();
-                            }
-
-
-                            else if (bm_psd.equals(login_psd) && login_account.equals(stralin)) {
+                            } else if (bm_psd.equals(login_psd) && login_account.equals(stralin)) {
                                 Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent();
@@ -116,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 finish();
-                            } else if(!bm_psd.equals(login_psd)){
+                            } else if (!bm_psd.equals(login_psd)) {
                                 Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
                             }
                         } else {
