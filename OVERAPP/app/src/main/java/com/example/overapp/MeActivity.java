@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -79,6 +81,13 @@ public class MeActivity extends AppCompatActivity {
         queryNmae();
         queryCollection();
 
+
+        //取得ActionBar对象
+        ActionBar actionBar = getSupportActionBar();
+        //调用show方法，展示actionbar
+        actionBar.show();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("个人中心");
 
         //btn_correct的监听
         mcorrect.setOnClickListener(new View.OnClickListener() {
@@ -263,6 +272,20 @@ public class MeActivity extends AppCompatActivity {
         ctlistview = (ListView) findViewById(R.id.collectionlist);
         musernickname = (TextView) findViewById(R.id.usernickname);
         imabtn = (ImageButton) findViewById(R.id.userpic);
+    }
+
+
+    //点击返回键推出
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

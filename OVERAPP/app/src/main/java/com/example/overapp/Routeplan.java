@@ -152,7 +152,7 @@ public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResult
         //调用show方法，展示actionbar
         actionBar.show();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("");
+        actionBar.setTitle("路线规划");
 
 
         //判断地址是从lbs搜索传入还是poi搜索传入

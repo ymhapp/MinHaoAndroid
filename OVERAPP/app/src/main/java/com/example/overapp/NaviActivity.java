@@ -280,6 +280,7 @@ public class NaviActivity extends Activity {
 
             intent.putExtras(bundle);
             startActivity(intent);
+            finish();
 
         }
 

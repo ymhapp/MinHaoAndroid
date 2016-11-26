@@ -109,10 +109,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity
-            android:name=".MeActivity"
-            android:label="@string/title_activity_me"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MeActivity" />
         <activity
             android:name=".RegisterActivity"
             android:label="请输入个人信息"
@@ -171,12 +168,14 @@
         </receiver>
 
         <!-- 第四部中创建的消息接收器，在这里进行注册 -->
-        <receiver android:name="com.example.overapp.MyPushMessageReceiver">
+        <receiver android:name=".MyPushMessageReceiver">
             <intent-filter>
                 <action android:name="cn.bmob.push.action.MESSAGE" />
             </intent-filter>
         </receiver>
-        <activity android:name="com.example.overapp.MyPushMessageReceiver"></activity>
+
+        <activity android:name=".MyPushMessageReceiver" />
+        <activity android:name=".Comment"></activity>
     </application>
 
 </manifest>

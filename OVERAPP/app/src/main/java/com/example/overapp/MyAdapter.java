@@ -47,12 +47,12 @@ public class MyAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item, null);
         }
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.pic);
+        TextView imageView = (TextView) convertView.findViewById(R.id.pic);
         TextView text=(TextView) convertView.findViewById(R.id.text);
         TextView itemPrice=(TextView)convertView.findViewById(R.id.price);
 
         MenuItemBean bean=mList.get(position);
-        imageView.setImageResource(bean.ItemImageResid);
+        imageView.setText(bean.ItemImageResid);
         text.setText(bean.ItemContent);
         itemPrice.setText(bean.ItemPrice);
         return convertView;

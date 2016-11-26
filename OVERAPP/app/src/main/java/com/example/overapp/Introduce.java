@@ -66,8 +66,8 @@ public class Introduce extends AppCompatActivity {
     private TextView tad;                                   //店铺地址栏
     private TextView tname;                                //店铺名字
     private ImageButton btn_like;
-    private Button btn_go;
-    private ImageView listPic;
+    private ImageButton btn_go;
+    private TextView listPic;
     private ImageView imageView;
     //
     private SimpleAdapter simple_adapter;
@@ -109,13 +109,10 @@ public class Introduce extends AppCompatActivity {
 
         //取得ActionBar对象
         ActionBar actionBar = getSupportActionBar();
-//        //调用hide方法，隐藏actionbar
-//        actionBar.hide();
         //调用show方法，展示actionbar
         actionBar.show();
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setTitle("");
+        actionBar.setTitle("店铺详情");
 
 
         //设置店名和菜单名
@@ -219,8 +216,8 @@ public class Introduce extends AppCompatActivity {
                         menuPrice.add(menu.getPrice());
                     }
 
-                    for (i = 0; i < menuName.size(); i++) {
-                        menuItemBean.add(new MenuItemBean(R.drawable.ic_launcher, menuName.get(i).toString(), menuPrice.get(i).toString() + "元"));
+                    for (i = 1; i < menuName.size(); i++) {
+                        menuItemBean.add(new MenuItemBean(+i + ".", menuName.get(i).toString(), menuPrice.get(i).toString() + "元"));
                     }
                     Message message = Message.obtain();
                     message.what = THREAD_2;
@@ -247,9 +244,9 @@ public class Introduce extends AppCompatActivity {
 
 
     private void getView() {
-        listPic = (ImageView) findViewById(R.id.pic);
+        listPic = (TextView) findViewById(R.id.pic);
         imageView = (ImageView) findViewById(R.id.shoppic);
-        btn_go = (Button) findViewById(R.id.shop_go);
+        btn_go = (ImageButton) findViewById(R.id.shop_go);
         btn_like = (ImageButton) findViewById(R.id.btn_like);
         listView = (ListView) findViewById(R.id.listView);
         tname = (TextView) findViewById(R.id.shop_name);
@@ -271,7 +268,6 @@ public class Introduce extends AppCompatActivity {
                     MyAdapter myAdapter = new MyAdapter(Introduce.this, menuItemBean);
                     listView.setAdapter(myAdapter);
 
-                    // listPic.setImageBitmap((Bitmap) msg.obj);
                     break;
 
 //                case 3:

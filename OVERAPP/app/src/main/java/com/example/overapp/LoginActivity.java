@@ -5,9 +5,11 @@ import android.content.Intent;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.com.overapp.model.LatLot;
@@ -15,6 +17,7 @@ import com.com.overapp.model.Menu;
 import com.com.overapp.model.User;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -62,10 +65,12 @@ public class LoginActivity extends AppCompatActivity {
         //设置button的透明度
         mlogin.getBackground().setAlpha(100);
         mregister.getBackground().setAlpha(0);
+
         //登录button的监听
-        mlogin.setOnClickListener(new View.OnClickListener() {
+        mlogin.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNoDoubleClick(View v) {
+                System.out.println(6666);
                 //获取EditText中的内容
                 login_account = mlogin_account.getText().toString();
                 login_psd = mlogin_psd.getText().toString();
@@ -132,11 +137,25 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-
             }
-
-
         });
+
+
+//        //设置点赞button的点击效果
+//        mlogin.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    //重新设置按下时的背景图片
+//                    ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.drawable.login_down));
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    //再修改为抬起时的正常图片
+//                    ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.drawable.login_up));
+//                }
+//                return false;
+//            }
+//        });
+
 
         //注册button的监听
         mregister.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +166,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 
     private void getView() {
@@ -154,5 +175,27 @@ public class LoginActivity extends AppCompatActivity {
         mlogin_psd = (EditText) findViewById(R.id.login_password);
         mlogin = (Button) findViewById(R.id.login);
         mregister = (Button) findViewById(R.id.register);
+    }
+
+
+    public abstract class NoDoubleClickListener implements View.OnClickListener {
+
+        public static final int MIN_CLICK_DELAY_TIME = 3000;
+        private long lastClickTime = 0;
+
+        @Override
+        public void onClick(View v) {
+            long currentTime = Calendar.getInstance().getTimeInMillis();
+            if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                lastClickTime = currentTime;
+                onNoDoubleClick(v);
+            }
+        }
+
+        protected void onNoDoubleClick(View v) {
+
+        }
+
+
     }
 }

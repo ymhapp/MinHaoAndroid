@@ -1,32 +1,28 @@
 package com.com.overapp.model;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.com.overapp.model.MenuItemBean;
 import com.example.overapp.R;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 /**
- * Created by acer on 2016/8/8.
+ * Created by acer on 2016/11/26.
  */
-public class MyAdapter extends BaseAdapter {
-    public List<MenuItemBean> mList;
+public class CommentAdapter extends BaseAdapter {
+    public List<CommentItemBean> mList;
     public LayoutInflater mInflater;
 
-    public MyAdapter(Context context, List<MenuItemBean> list) {
+    public CommentAdapter(Context context, List<CommentItemBean> list) {
         mList = list;
         mInflater = LayoutInflater.from(context);
     }
-
 
     @Override
     public int getCount() {
@@ -46,16 +42,19 @@ public class MyAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item, null);
+            convertView = mInflater.inflate(R.layout.comment_list, null);
         }
-        TextView imageView = (TextView) convertView.findViewById(R.id.pic);
-        TextView text = (TextView) convertView.findViewById(R.id.text);
-        TextView itemPrice = (TextView) convertView.findViewById(R.id.price);
 
-        MenuItemBean bean = mList.get(position);
-        imageView.setText(bean.ItemImageResid);
-        text.setText(bean.ItemContent);
-        itemPrice.setText(bean.ItemPrice);
+        TextView usernaem = (TextView) convertView.findViewById(R.id.text_username);
+        TextView time = (TextView) convertView.findViewById(R.id.text_time);
+        TextView comment = (TextView) convertView.findViewById(R.id.text_comment);
+
+        CommentItemBean bean = mList.get(position);
+        usernaem.setText(bean.UserName);
+        time.setText(bean.Time);
+        comment.setText(bean.Comment);
+
         return convertView;
     }
 }
+

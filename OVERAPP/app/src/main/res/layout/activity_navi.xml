@@ -18,7 +18,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="false"
             android:layout_marginBottom="10dip"
-            android:id="@+id/linearLayout2">
+            android:id="@+id/linearLayout2"
+            android:orientation="horizontal">
 
         </LinearLayout>
 
@@ -26,7 +27,7 @@
             android:id="@+id/gcjNaviBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="马上开始"
+            android:text="导航开始"
             android:layout_marginBottom="111dp"
             android:layout_above="@+id/linearLayout2"
             android:layout_centerHorizontal="true" />

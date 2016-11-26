@@ -23,31 +23,115 @@
                 android:id="@+id/shop_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/shoppic"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
                 android:text="fdfdfdfdf"
                 android:textColor="#FFFFFF"
-                android:textSize="22dp" />
+                android:textSize="18dp" />
 
-            <ImageButton
-                android:id="@+id/btn_like"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:background="#ff8400"
-                android:src="@drawable/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/shopaddress"
+                android:orientation="vertical"
+                android:id="@+id/linearLayout6">
+
+                //三个imagebutotn
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/linearLayout"
+                    android:orientation="horizontal">
+
+
+                    <ImageButton
+                        android:id="@+id/btn_like"
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:layout_above="@+id/textView2"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_weight="1"
+                        android:background="#ff8400"
+                        android:src="@drawable/white" />
+
+
+                    <ImageButton
+                        android:id="@+id/btn_comment"
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:layout_alignLeft="@+id/shop_name"
+                        android:layout_alignStart="@+id/shop_name"
+                        android:layout_below="@+id/shopaddress"
+                        android:layout_weight="1"
+                        android:background="#ff8400"
+                        android:src="@drawable/white" />
+
+                    <ImageButton
+                        android:id="@+id/shop_go"
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/shopaddress"
+                        android:layout_weight="1"
+                        android:background="#ff8400"
+                        android:src="@drawable/white" />
+                </LinearLayout>
+
+
+                //三个按钮的中文提示
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_collect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="收藏"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="评论"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_navigation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="导航"
+                        android:textSize="18sp" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/shoppic"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_below="@+id/btn_like"
-                android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_launcher" />
 
 
@@ -55,28 +139,31 @@
                 android:id="@+id/shopaddress"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/shop_name"
-                android:layout_centerHorizontal="true"
-                android:singleLine="true"
                 android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:focusableInTouchMode="true"
                 android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingTop="20dp"
                 android:scrollHorizontally="true"
-                android:paddingTop="10dp"
+                android:singleLine="true"
                 android:text="12323"
                 android:textColor="#FFFFFF"
-                android:textSize="22dp" />
+                android:textSize="18dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
 
 
-            <Button
-                android:id="@+id/shop_go"
+            <TextView
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:text="到这去" />
+                android:text="地址:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_above="@+id/linearLayout6"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
 
         </RelativeLayout>
@@ -90,4 +177,5 @@
         android:layout_below="@+id/linearLayout"
         android:divider="#E8E8E8"
         android:dividerHeight="3px"></ListView>
+
 </RelativeLayout>
