@@ -16,13 +16,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 
 import com.com.overapp.model.Collection;
@@ -37,18 +38,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.bmob.v3.Bmob;
+import cn.bmob.v3.datatype.BmobQueryResult;
+import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 
 public class Introduce extends AppCompatActivity {
     private String cot_shopname;
     private String cot_shopadd;
     public final static String SER_KEY = "com.andy.ser";
+
     private String str_account;
+
+    private String cotobj;
+
+
     //接收传送过来的坐标
     private double lbs_lat;
     private double lbs_lot;
@@ -56,7 +64,7 @@ public class Introduce extends AppCompatActivity {
 
     private static final int THREAD_1 = 1;
     private static final int THREAD_2 = 2;
-    private static final int THREAD_3 = 3;
+
 
     private ProgressDialog mDialog;
     private List<MenuItemBean> menuItemBean = new ArrayList<>();
@@ -65,7 +73,9 @@ public class Introduce extends AppCompatActivity {
     private ListView listView;                              //显示图片和菜单名的listview
     private TextView tad;                                   //店铺地址栏
     private TextView tname;                                //店铺名字
-    private ImageButton btn_like;
+
+    private ToggleButton btn_like;
+    private ImageButton btn_comment;
     private ImageButton btn_go;
     private TextView listPic;
     private ImageView imageView;
@@ -76,7 +86,6 @@ public class Introduce extends AppCompatActivity {
     private int i = 0;
     private String shopurl;
     private String shopad;
-    private String price;
     private String shopname;
     private String shopBest;
 
@@ -88,16 +97,18 @@ public class Introduce extends AppCompatActivity {
         getView();
         // 新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
-        // 接收店铺信息
-        shopad = bundle.getString("shopad");
-        shopname = bundle.getString("shopname");
-        shopurl = bundle.getString("shopurl");
-        shopBest = bundle.getString("shopbest");
-        //接收目的地坐标
-        LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+
+        //接收店铺信息
+        final LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+        str_account = latLot.getStr_account();
+        shopad = latLot.getShopad();
+        shopname = latLot.getShopname();
+        shopurl = latLot.getShopurl();
+        shopBest = latLot.getShopbest();
+        //接收店铺经纬度坐标
         lbs_lat = latLot.getLbs_latitude();
         lbs_lot = latLot.getLbs_longitide();
-        str_account = latLot.getStr_account();
+
         cot_shopname = latLot.getCot_shopname();
         cot_shopadd = latLot.getCot_shopadd();
 
@@ -129,6 +140,7 @@ public class Introduce extends AppCompatActivity {
             //开启线程
             new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
             queryMenu();
+            queryCotobj();
         } else {
             tname.setText(shopname);
             tad.setText(shopad);
@@ -139,8 +151,26 @@ public class Introduce extends AppCompatActivity {
             //开启线程
             new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
             queryMenu();
+            queryCotobj();
         }
 
+        //评论button的监听
+        btn_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 点击button跳转到导航页面
+                Intent intent = new Intent();
+                intent.setClass(Introduce.this, CommentActivity.class);
+                // 用Bundle携带数据
+                Bundle bundle = new Bundle();
+                LatLot latlot = new LatLot();
+                latlot.setStr_account(str_account);
+                latlot.setShopname(shopname);
+                bundle.putSerializable(SER_KEY, latlot);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
         //btn_go的监听
         btn_go.setOnClickListener(new View.OnClickListener() {
@@ -148,8 +178,7 @@ public class Introduce extends AppCompatActivity {
             public void onClick(View v) {
                 // 点击button跳转到导航页面
                 Intent intent = new Intent();
-                intent.setClass(Introduce.this,
-                        Routeplan.class);
+                intent.setClass(Introduce.this, Routeplan.class);
                 // 用Bundle携带数据
                 Bundle bundle = new Bundle();
                 LatLot latlot = new LatLot();
@@ -166,35 +195,72 @@ public class Introduce extends AppCompatActivity {
         btn_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collection collection = new Collection();
-                collection.setCtShopName(shopname);
-                collection.setCtShopBest(shopBest);
-                collection.setCtShopadd(shopad);
-                collection.setUserAccount(str_account);
-                collection.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        Toast.makeText(Introduce.this, "收藏成功", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
-        //设置点赞button的点击效果
-        btn_like.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //重新设置按下时的背景图片
-                    ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.drawable.red));
+                if (btn_like.isChecked()) {
+                    Collection collection = new Collection();
+                    collection.setCtShopName(shopname);
+                    collection.setCtShopBest(shopBest);
+                    collection.setCtShopadd(shopad);
+                    collection.setUserAccount(str_account);
+                    collection.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            Toast.makeText(Introduce.this, "收藏成功", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    System.out.println("+++++esdfs");
+                    Collection collection = new Collection();
+                    collection.setObjectId(cotobj);
+                    collection.delete(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                System.out.println("+++++66666");
+                            } else {
+                                Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                            }
+                        }
+                    });
+
+
                 }
-//               else if(event.getAction() == MotionEvent.ACTION_UP){
-//                    //再修改为抬起时的正常图片
-//                    ((ImageButton)v).setImageDrawable(getResources().getDrawable(R.drawable.grray));
-//                }
-                return false;
             }
         });
 
+
+        //设置交通图图标
+        btn_like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                btn_like.setChecked(isChecked);
+                btn_like.setBackgroundResource(isChecked ? R.drawable.red : R.drawable.white);
+            }
+        });
+
+
+    }
+
+    private void queryCotobj() {
+        String bql = "select * from Collection where ctShopName =? and userAccount=?";
+        new BmobQuery<Collection>().doSQLQuery(bql, new SQLQueryListener<Collection>() {
+
+            @Override
+            public void done(BmobQueryResult<Collection> result, BmobException e) {
+                if (e == null) {
+                    List<Collection> list = (List<Collection>) result.getResults();
+                    if (list != null && list.size() > 0) {
+                        for (Collection collection : list) {
+                            cotobj = collection.getObjectId();
+                            System.out.println("++++++" + collection.getObjectId());
+                        }
+                    } else {
+                        Log.i("smile", "查询成功，无数据返回");
+                    }
+                } else {
+                    Log.i("smile", "错误码：" + e.getErrorCode() + "，错误描述：" + e.getMessage());
+                }
+            }
+        }, shopname, str_account);
     }
 
 
@@ -244,10 +310,11 @@ public class Introduce extends AppCompatActivity {
 
 
     private void getView() {
+        btn_comment = (ImageButton) findViewById(R.id.btn_comment);
         listPic = (TextView) findViewById(R.id.pic);
         imageView = (ImageView) findViewById(R.id.shoppic);
         btn_go = (ImageButton) findViewById(R.id.shop_go);
-        btn_like = (ImageButton) findViewById(R.id.btn_like);
+        btn_like = (ToggleButton) findViewById(R.id.btn_like);
         listView = (ListView) findViewById(R.id.listView);
         tname = (TextView) findViewById(R.id.shop_name);
         tad = (TextView) findViewById(R.id.shopaddress);

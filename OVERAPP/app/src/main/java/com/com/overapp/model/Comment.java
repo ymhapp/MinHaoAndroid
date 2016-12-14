@@ -6,21 +6,12 @@ import cn.bmob.v3.BmobObject;
  * Created by acer on 2016/11/26.
  */
 public class Comment extends BmobObject {
-    private  String objectId;
+
     private String userName;
-    private String time;
     private String comment;
     private String shopName;
 
-    @Override
-    public String getObjectId() {
-        return objectId;
-    }
 
-    @Override
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
 
     public String getShopName() {
         return shopName;
@@ -38,13 +29,6 @@ public class Comment extends BmobObject {
         this.userName = userName;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     public String getComment() {
         return comment;

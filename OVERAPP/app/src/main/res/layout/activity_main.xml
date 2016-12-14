@@ -11,6 +11,7 @@
         android:clickable="true" />
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -67,4 +68,36 @@
 
     </FrameLayout>
 
+
+    <ToggleButton
+        android:id="@+id/traffic_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/frameLayout"
+        android:layout_marginTop="46dp"
+        android:background="@drawable/traffic"
+        android:textOff=""
+        android:textOn="" />
+
+    <ImageButton
+        android:id="@+id/lbs_search"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/lbs_search"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/traffic_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+    <ImageButton
+        android:id="@+id/mylocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/jiantou"
+        android:layout_alignTop="@+id/traffic_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

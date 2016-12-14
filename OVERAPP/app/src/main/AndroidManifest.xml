@@ -122,7 +122,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".CorrectActivity" />
-        <activity android:name=".TestActivity" />
 
         <service
             android:name="cn.bmob.push.lib.service.PushService"
@@ -175,7 +174,8 @@
         </receiver>
 
         <activity android:name=".MyPushMessageReceiver" />
-        <activity android:name=".Comment"></activity>
+        <activity android:name=".CommentActivity" />
+
     </application>
 
 </manifest>

@@ -118,7 +118,7 @@ public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResult
         setContentView(R.layout.activity_routeplan);
 
         // 新页面接收数据
-        Bundle bundle = this.getIntent().getExtras();
+
 
         final LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         lbs_lat = latLot.getLbs_latitude();

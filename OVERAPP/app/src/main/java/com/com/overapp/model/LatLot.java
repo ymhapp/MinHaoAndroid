@@ -6,6 +6,11 @@ import java.io.Serializable;
  * Created by acer on 2016/8/11.
  */
 public class LatLot implements Serializable {
+    private String shopname;
+    private String shopad;
+    private String shopurl;
+    private String shopbest;
+
     //路线规划输入框中的终点地址
     private double end_navi_lat;
     private double end_navi_lot;
@@ -28,6 +33,40 @@ public class LatLot implements Serializable {
     private double lbs_longitide;
     private String lbs_Add;
     private static final long serialVersionUID = -7620435178023928252L;
+
+
+
+    public String getShopname() {
+        return shopname;
+    }
+
+    public void setShopname(String shopname) {
+        this.shopname = shopname;
+    }
+
+    public String getShopad() {
+        return shopad;
+    }
+
+    public void setShopad(String shopad) {
+        this.shopad = shopad;
+    }
+
+    public String getShopurl() {
+        return shopurl;
+    }
+
+    public void setShopurl(String shopurl) {
+        this.shopurl = shopurl;
+    }
+
+    public String getShopbest() {
+        return shopbest;
+    }
+
+    public void setShopbest(String shopbest) {
+        this.shopbest = shopbest;
+    }
 
     public double getEnd_navi_lat() {
         return end_navi_lat;

@@ -3,6 +3,7 @@ package com.example.overapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
@@ -12,11 +13,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -75,6 +80,10 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     private String strlang = "langye@163.com";
     private String stralin = "alin@163.com";
 
+
+    private ImageButton mylocation;
+    private ImageButton lbs_search;
+    private ToggleButton traffic_button;
     //接收用户信息
     private String str_account;
     private String str_psd;
@@ -92,7 +101,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
     //传递店铺信息的参数
     private String straddress;
-
     private String markAdress;
     private String strshopname;
     private String strurl;
@@ -151,15 +159,66 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         CloudManager.getInstance().init(MainActivity.this);
 
 
-
         // 获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
+
 
         // 初始化覆盖物
         initOverlay();
         // 初始化定位
         initLocation();
+
+
+        //交通图按钮
+        traffic_button = (ToggleButton) findViewById(R.id.traffic_button);
+        //设置交通图图标
+        traffic_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                traffic_button.setChecked(isChecked);
+                traffic_button.setBackgroundResource(isChecked ? R.drawable.traffic_start : R.drawable.traffic);
+            }
+        });
+
+        //交通图button的监听
+        traffic_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (traffic_button.isChecked()) {
+                    mBaiduMap.setTrafficEnabled(true);
+                } else {
+                    mBaiduMap.setTrafficEnabled(false);
+                }
+
+            }
+        });
+
+        //lbs搜索button的监听
+        lbs_search = (ImageButton) findViewById(R.id.lbs_search);
+        lbs_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NearbySearchInfo info = new NearbySearchInfo();
+                info.ak = "hA4E4f7L0sumUOLd6mVS7TL0NfF6YC3n";
+                info.geoTableId = 140125;
+                info.radius = 1500;
+                info.location = (currlocation.getLongitude() + "," + currlocation
+                        .getLatitude());
+                CloudManager.getInstance().nearbySearch(info);
+            }
+        });
+
+
+        mylocation = (ImageButton) findViewById(R.id.mylocation);
+        mylocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng latLng = new LatLng(mLatitude, mLongtitude);
+                MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+                mBaiduMap.animateMapStatus(msu);
+            }
+        });
 
 
         // 初始化搜索模块，注册搜索事件监听
@@ -221,14 +280,14 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                                         intent.setClass(MainActivity.this, Introduce.class);
                                         // 用Bundle携带数据
                                         Bundle bundle = new Bundle();
-                                        // 传递店铺信息
-                                        bundle.putString("shopname", strshopname);
-                                        bundle.putString("shopad", straddress);
-                                        bundle.putString("shopurl", strurl);
-                                        bundle.putString("shopbest", strbest);
 
-                                        //传递点击的Marker坐标
+
                                         LatLot latlot = new LatLot();
+                                        latlot.setShopad(straddress);
+                                        latlot.setShopbest(strbest);
+                                        latlot.setShopname(strshopname);
+                                        latlot.setShopurl(strurl);
+                                        //传递点击的Marker坐标
                                         latlot.setLbs_latitude(lbs_lat);
                                         latlot.setLbs_longitide(lbs_lot);
                                         latlot.setStr_account(str_account);
@@ -254,25 +313,25 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         OnInfoWindowClickListener oinfolistener = null;
                         oinfolistener = new OnInfoWindowClickListener() {
                             public void onInfoWindowClick() {
-                                // 点击button跳转到导航页面
-                                Intent intent = new Intent();
-                                intent.setClass(MainActivity.this, Introduce.class);
-                                // 用Bundle携带数据
-                                Bundle bundle = new Bundle();
-                                // 传递店铺信息
-                                bundle.putString("shopname", strshopname);
-                                bundle.putString("shopad", straddress);
-                                bundle.putString("shopurl", strurl);
-                                bundle.putString("shopbest", strbest);
-
-                                //传递点击的Marker坐标
-                                LatLot latlot = new LatLot();
-                                latlot.setLbs_latitude(lbs_lat);
-                                latlot.setLbs_longitide(lbs_lot);
-//                                latlot.setStr_account(str_account);
-                                bundle.putSerializable(SER_KEY, latlot);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
+//                                // 点击button跳转到导航页面
+//                                Intent intent = new Intent();
+//                                intent.setClass(MainActivity.this, Introduce.class);
+//                                // 用Bundle携带数据
+//                                Bundle bundle = new Bundle();
+//                                // 传递店铺信息
+//                                bundle.putString("shopname", strshopname);
+//                                bundle.putString("shopad", straddress);
+//                                bundle.putString("shopurl", strurl);
+//                                bundle.putString("shopbest", strbest);
+//
+//                                //传递点击的Marker坐标
+//                                LatLot latlot = new LatLot();
+//                                latlot.setLbs_latitude(lbs_lat);
+//                                latlot.setLbs_longitide(lbs_lot);
+////                                latlot.setStr_account(str_account);
+//                                bundle.putSerializable(SER_KEY, latlot);
+//                                intent.putExtras(bundle);
+//                                startActivity(intent);
                             }
                         };
                     }
@@ -348,28 +407,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
     }
 
-    /**
-     * 搜索附近美食
-     */
-    private void searchfood() {
-        NearbySearchInfo info = new NearbySearchInfo();
-        info.ak = "hA4E4f7L0sumUOLd6mVS7TL0NfF6YC3n";
-        info.geoTableId = 140125;
-        info.radius = 1500;
-        info.location = (currlocation.getLongitude() + "," + currlocation
-                .getLatitude());
-        CloudManager.getInstance().nearbySearch(info);
-    }
-
-    /**
-     * 回到我的位置
-     */
-    private void centerToMyLocation() {
-
-        LatLng latLng = new LatLng(mLatitude, mLongtitude);
-        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-        mBaiduMap.animateMapStatus(msu);
-    }
 
     /**
      * 进行定位
@@ -416,24 +453,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             // 卫星地图
             case R.id.map_site:
                 mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
-                break;
-            // 交通图
-            case R.id.map_traffic:
-                if (mBaiduMap.isTrafficEnabled()) {
-                    mBaiduMap.setTrafficEnabled(false);
-                    item.setTitle("实时交通(off)");
-                } else {
-                    mBaiduMap.setTrafficEnabled(true);
-                    item.setTitle("实时交通(on)");
-                }
-                break;
-            // 回到我的位置
-            case R.id.map_location:
-                centerToMyLocation();
-                break;
-            // 搜索附近美食
-            case R.id.map_food:
-                searchfood();
                 break;
             //个人中心
             case R.id.me:

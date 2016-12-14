@@ -35,8 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class MeActivity extends AppCompatActivity {
@@ -52,6 +54,10 @@ public class MeActivity extends AppCompatActivity {
     //修改后的用户昵称
     private String cort_nickname;
 
+
+
+
+    private List<String> ctshop_obj = new ArrayList<String>();
     private List<String> ctnameList = new ArrayList<String>(); //接收查询菜单图片结果的list
     private List<String> ctaddList = new ArrayList<String>();
     private List<String> ctbestList = new ArrayList<String>();
@@ -77,7 +83,6 @@ public class MeActivity extends AppCompatActivity {
         str_psd = latLot.getStr_psd();
         System.out.println("用户ID" + str_account);
         getView();
-        queryCollectionOBJ();
         queryNmae();
         queryCollection();
 
@@ -108,29 +113,10 @@ public class MeActivity extends AppCompatActivity {
 
     }
 
-    //查询收藏店铺的ID
-    private void queryCollectionOBJ() {
-        final BmobQuery<Collection> collection = new BmobQuery<Collection>();
-        //用店铺id进行查询
-        collection.addWhereEqualTo("userAccount", str_account);
-        collection.setLimit(100);
-        collection.findObjects(new FindListener<Collection>() {
-            @Override
-            public void done(List<Collection> list, BmobException e) {
-                if (e == null) {
-                    for (Collection collectionobj : list) {
-                        cor_obj = collectionobj.getObjectId();
-                    }
-                }
-            }
-        });
-    }
-
 
     //查询用户收藏的店铺
     private void queryCollection() {
         final BmobQuery<Collection> collection = new BmobQuery<Collection>();
-        //
         //用店铺id进行查询
         collection.addWhereEqualTo("userAccount", str_account);
         collection.setLimit(100);
@@ -142,6 +128,7 @@ public class MeActivity extends AppCompatActivity {
                         ctnameList.add(collection_shop.getCtShopName());
                         ctaddList.add(collection_shop.getCtShopadd());
                         ctbestList.add(collection_shop.getCtShopBest());
+                        ctshop_obj.add(collection_shop.getObjectId());
                     }
 
                     for (int i = 0; i < ctbestList.size(); i++) {
@@ -179,6 +166,10 @@ public class MeActivity extends AppCompatActivity {
                     ctlistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            //获取点击的item的店名以及店铺id
+                            str_shopname = ctnameList.get(position);
+                            cor_obj=ctshop_obj.get(position);
+
                             //长按弹出dialog
                             AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
                             builder.setTitle("提示");
@@ -186,7 +177,7 @@ public class MeActivity extends AppCompatActivity {
                             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() { //设置确定按钮
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //删除收藏店铺
+//                                    //删除收藏店铺
                                     deleCollection();
                                     Toast.makeText(MeActivity.this, "成功移除", Toast.LENGTH_SHORT).show();
                                     // 点击button跳转到导航页面
@@ -199,10 +190,8 @@ public class MeActivity extends AppCompatActivity {
                                     bundle.putSerializable(SER_KEY, latlot);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
-
                                 }
                             });
-
                             builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -213,11 +202,31 @@ public class MeActivity extends AppCompatActivity {
                             return false;
                         }
                     });
-
-
                 }
+            }
+        });
+    }
 
-
+    //查询用户昵称
+    private void queryNmae() {
+        BmobQuery<User> query = new BmobQuery<User>();
+        //查询用户信息
+        query.addWhereEqualTo("userAccount", str_account);
+        query.setLimit(1);
+        //执行查询方法
+        query.findObjects(new FindListener<User>() {
+            @Override
+            public void done(List<User> list, BmobException e) {
+                if (e == null) {
+                    for (User user : list) {
+                        //获得nickanme的信息
+                        str_nickname = user.getUserNickName();
+                        System.out.println("nickname:" + str_nickname);
+                        musernickname.setText(str_nickname);
+                    }
+                } else {
+                    System.out.println("查询失败");
+                }
             }
         });
     }
@@ -232,40 +241,15 @@ public class MeActivity extends AppCompatActivity {
                 if (e == null) {
                     Log.i("bmob", "成功");
                 } else {
+                    System.out.println("+++9977" + e);
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
             }
         });
-
     }
 
 
-    //查询用户昵称
-    private void queryNmae() {
-        BmobQuery<User> query = new BmobQuery<User>();
-        //查询用户信息
-        query.addWhereEqualTo("userAccount", str_account);
-        query.setLimit(1);
-        //执行查询方法
-        query.findObjects(new FindListener<User>() {
 
-                              @Override
-                              public void done(List<User> list, BmobException e) {
-                                  if (e == null) {
-                                      for (User user : list) {
-                                          //获得nickanme的信息
-                                          str_nickname = user.getUserNickName();
-                                          System.out.println("nickname:" + str_nickname);
-                                          musernickname.setText(str_nickname);
-                                      }
-                                  } else {
-                                      System.out.println("查询失败");
-                                  }
-                              }
-                          }
-
-        );
-    }
 
     private void getView() {
         mcorrect = (Button) findViewById(R.id.btn_correct);
