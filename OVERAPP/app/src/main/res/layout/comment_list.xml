@@ -17,7 +17,7 @@
             android:layout_marginTop="15dp"
             android:gravity="left"
             android:text="用户名 "
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_time"
@@ -28,7 +28,7 @@
             android:gravity="left"
             android:singleLine="true"
             android:text="时间"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,7 +43,7 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:text="别人的评论"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
 
 
