@@ -33,20 +33,18 @@
 
 
             <LinearLayout
+                android:id="@+id/linearLayout6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/shopaddress"
-                android:orientation="vertical"
-                android:id="@+id/linearLayout6">
+                android:orientation="vertical">
 
                 //三个imagebutotn
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/linearLayout"
+
                     android:orientation="horizontal">
 
 
@@ -54,37 +52,34 @@
                         android:id="@+id/btn_like"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:textOn=""
-                        android:textOff=""
                         android:layout_above="@+id/textView2"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-
+                        android:layout_marginLeft="35dp"
                         android:background="@drawable/white"
-                        android:src="@drawable/white" />
+                        android:src="@drawable/white"
+
+                        android:textOff=""
+                        android:textOn="" />
 
 
                     <ImageButton
                         android:id="@+id/btn_comment"
-                        android:layout_width="80dp"
+                        android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_alignLeft="@+id/shop_name"
-                        android:layout_alignStart="@+id/shop_name"
-                        android:layout_below="@+id/shopaddress"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="70dp"
+
                         android:background="#ff8400"
-                        android:src="@drawable/white" />
+                        android:src="@drawable/comment" />
 
                     <ImageButton
                         android:id="@+id/shop_go"
-                        android:layout_width="80dp"
+                        android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@+id/shopaddress"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="70dp"
+
                         android:background="#ff8400"
-                        android:src="@drawable/white" />
+                        android:src="@drawable/route" />
                 </LinearLayout>
 
 
@@ -141,6 +136,8 @@
                 android:id="@+id/shopaddress"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -150,22 +147,20 @@
                 android:singleLine="true"
                 android:text="12323"
                 android:textColor="#FFFFFF"
-                android:textSize="18dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:textSize="18dp" />
 
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_above="@+id/linearLayout6"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:text="地址:"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:layout_above="@+id/linearLayout6"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:textSize="18sp" />
 
 
         </RelativeLayout>

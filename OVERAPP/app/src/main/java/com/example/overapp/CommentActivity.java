@@ -1,8 +1,10 @@
 package com.example.overapp;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,17 +55,25 @@ public class CommentActivity extends AppCompatActivity {
         System.out.println("+++++++" + str_account);
         System.out.println("+++++++" + str_shopname);
 
+
+
+        //取得ActionBar对象
+        ActionBar actionBar = getSupportActionBar();
+        //调用show方法，展示actionbar
+        actionBar.show();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("评论");
+
+
         queryUserName();
         System.out.println("+++++" + userName);
         queryNmae();
-
 
 
         //评论发送按钮的监听
         comment_send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //获取输入框中的内容
                 comment_text = commentInput.getText().toString();
                 System.out.println("+++++++3" + comment_text);
@@ -83,15 +93,9 @@ public class CommentActivity extends AppCompatActivity {
                         commentAdapter.notifyDataSetChanged();
                     }
                 });
-//// 点击button跳转到导航页面
-//                Intent intent = new Intent();
-//                intent.setClass(CommentActivity.this, Introduce.class);
-//                // 用Bundle携带数据
-//                Bundle bundle = new Bundle();
-//
-//                intent.putExtras(bundle);
-//                startActivity(intent);
 
+
+                finish();
             }
         });
 
@@ -164,5 +168,17 @@ public class CommentActivity extends AppCompatActivity {
         );
     }
 
+    //点击返回键推出
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

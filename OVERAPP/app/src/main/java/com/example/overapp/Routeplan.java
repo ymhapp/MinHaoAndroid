@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +82,7 @@ public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResult
 
     private EditText startText;
     private EditText endText;
-    private Button mbtnnavi;
+    private ImageButton mbtnnavi;
 
     private MapView mMapView;
     private BaiduMap mBaiduMap;
@@ -100,8 +101,8 @@ public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResult
     private LocationMode mLocationMode;
 
     // 浏览路线节点相关
-    Button mBtnPre = null; // 上一个节点
-    Button mBtnNext = null; // 下一个节点
+    private  Button mBtnPre = null; // 上一个节点
+    private  Button mBtnNext = null; // 下一个节点
     int nodeIndex = -1; // 节点索引,供浏览节点时使用
     RouteLine route = null;
     OverlayManager routeOverlay = null;
@@ -243,7 +244,7 @@ public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResult
 
 
     private void getView() {
-        mbtnnavi = (Button) findViewById(R.id.btn_navi);
+        mbtnnavi = (ImageButton) findViewById(R.id.btn_navi);
         mBtnPre = (Button) findViewById(R.id.pre);
         mBtnNext = (Button) findViewById(R.id.next);
         startText = (EditText) findViewById(R.id.start);

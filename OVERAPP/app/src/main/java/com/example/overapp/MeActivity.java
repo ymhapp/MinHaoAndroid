@@ -1,7 +1,6 @@
 package com.example.overapp;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,7 +69,7 @@ public class MeActivity extends AppCompatActivity {
 
     private TextView musernickname;
     private ListView ctlistview;
-    private Button mcorrect;
+    private ImageButton mcorrect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +251,7 @@ public class MeActivity extends AppCompatActivity {
 
 
     private void getView() {
-        mcorrect = (Button) findViewById(R.id.btn_correct);
+        mcorrect = (ImageButton) findViewById(R.id.btn_correct);
         ctlistview = (ListView) findViewById(R.id.collectionlist);
         musernickname = (TextView) findViewById(R.id.usernickname);
         imabtn = (ImageButton) findViewById(R.id.userpic);

@@ -172,7 +172,7 @@ public class Introduce extends AppCompatActivity {
             }
         });
 
-        //btn_go的监听
+        //导航button监听
         btn_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

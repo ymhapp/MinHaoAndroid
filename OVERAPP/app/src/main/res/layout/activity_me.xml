@@ -17,19 +17,19 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="190dp"
-            android:background="#01d3ae">
+            android:layout_width="match_parent"
+            android:layout_height="146dp"
+            android:background="#ff8400">
 
             <TextView
                 android:id="@+id/usernickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/userpic"
-                android:layout_centerHorizontal="true"
                 android:paddingTop="25dp"
                 android:text="fdfdfdfdf"
-                android:textSize="24dp" />
+                android:textSize="24dp"
+                android:layout_alignBottom="@+id/btn_correct"
+                android:layout_centerHorizontal="true" />
 
             <!--<ImageView-->
             <!--android:id="@+id/userpic"-->
@@ -43,7 +43,9 @@
                 android:src="@drawable/user_pic"
                 android:layout_width="109dp"
                 android:layout_height="109dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
 
             <TextView
@@ -56,21 +58,23 @@
                 android:textSize="16dp" />
 
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_correct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="修改" />
+                android:background="#ff8400"
+                android:src="@drawable/correcte" />
 
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="139dp"
-            android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E8E8E8">
 
             <TextView
                 android:id="@+id/textView"
@@ -91,7 +95,7 @@
         android:layout_below="@+id/linearLayout"
         android:clickable="true"
         android:divider="#E8E8E8"
-        android:dividerHeight="9px">
+        android:dividerHeight="3px">
 
     </ListView>
 

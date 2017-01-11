@@ -1,52 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CommentActivity">
-
-
-    <ListView
-        android:id="@+id/commentlistView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:divider="#E8E8E8"
-        android:dividerHeight="3px"
-      ></ListView>
+    android:orientation="vertical"
+    tools:context=".CommentActivity"
+    android:weightSum="1">
 
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="399dp"
+        android:orientation="vertical"
+        android:layout_weight="0.98">
+
+        <ListView
+            android:id="@+id/commentlistView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:divider="#E8E8E8"
+            android:dividerHeight="3px"></ListView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout5">
+        android:background="#E8E8E8"
+
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/commentInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-
             android:layout_alignParentBottom="true"
+
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_weight="8" />
 
         <Button
             android:id="@+id/comment_send_button"
             android:layout_width="90dp"
             android:layout_height="40dp"
 
-            android:text="New Button"
+            android:layout_alignParentEnd="true"
 
-            android:layout_alignTop="@+id/textView4"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignTop="@+id/textView4"
+            android:text="发布" />
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
