@@ -27,6 +27,7 @@ import com.com.overapp.model.LatLot;
 import com.com.overapp.model.Menu;
 import com.com.overapp.model.MenuItemBean;
 import com.com.overapp.model.MyAdapter;
+import com.com.overapp.model.Shop;
 import com.com.overapp.model.User;
 
 import java.util.ArrayList;
@@ -49,11 +50,10 @@ public class MeActivity extends AppCompatActivity {
     private String str_shopname;
     private String str_shopadd;
     private String cor_obj;
+    private String shopurl;
 
     //修改后的用户昵称
     private String cort_nickname;
-
-
 
 
     private List<String> ctshop_obj = new ArrayList<String>();
@@ -62,7 +62,11 @@ public class MeActivity extends AppCompatActivity {
     private List<String> ctbestList = new ArrayList<String>();
     private List<CollectionItemBean> collectionItemBeanList = new ArrayList<>();
 
+//    public final static String SER_KEY1 = "com.andy.ser1";
+
     public final static String SER_KEY = "com.andy.ser";
+
+
     private String str_account;
     private String str_psd;
     private String str_nickname;
@@ -80,7 +84,7 @@ public class MeActivity extends AppCompatActivity {
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         str_account = latLot.getStr_account();
         str_psd = latLot.getStr_psd();
-        System.out.println("用户ID" + str_account);
+        System.out.println("666" + str_account);
         getView();
         queryNmae();
         queryCollection();
@@ -145,7 +149,7 @@ public class MeActivity extends AppCompatActivity {
                             for (int i = 0; i < ctbestList.size(); i++) {
                                 str_shopname = ctnameList.get(position).toString();
                                 str_shopadd = ctaddList.get(position).toString();
-                                System.out.println("item:" + str_shopname);
+                                System.out.println("666+item:" + str_shopname);
                             }
                             // 点击button跳转到导航页面
                             Intent intent = new Intent();
@@ -153,8 +157,14 @@ public class MeActivity extends AppCompatActivity {
                             // 用Bundle携带数据
                             Bundle bundle = new Bundle();
                             LatLot latlot = new LatLot();
-                            latlot.setCot_shopname(str_shopname);
-                            latlot.setCot_shopadd(str_shopadd);
+                            latlot.setShopname(str_shopname);
+                            latlot.setShopad(str_shopadd);
+                            latlot.setShopurl(shopurl);
+//                            latlot.setCot_shopname(str_shopname);
+//                            latlot.setCot_shopadd(str_shopadd);
+                            System.out.println("666+发送cot" + str_shopname);
+                            latlot.setStr_account(str_account);
+
                             bundle.putSerializable(SER_KEY, latlot);
                             intent.putExtras(bundle);
                             startActivity(intent);
@@ -167,7 +177,7 @@ public class MeActivity extends AppCompatActivity {
                         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                             //获取点击的item的店名以及店铺id
                             str_shopname = ctnameList.get(position);
-                            cor_obj=ctshop_obj.get(position);
+                            cor_obj = ctshop_obj.get(position);
 
                             //长按弹出dialog
                             AlertDialog.Builder builder = new AlertDialog.Builder(MeActivity.this);
@@ -206,6 +216,31 @@ public class MeActivity extends AppCompatActivity {
         });
     }
 
+
+    //查询店铺的经纬度
+    private void queryShopLatitude() {
+        final BmobQuery<Shop> user = new BmobQuery<Shop>();
+        user.addWhereEqualTo("shopName", str_shopname);
+        user.setLimit(1);
+        user.findObjects(new FindListener<Shop>() {
+
+
+            @Override
+            public void done(List<Shop> list, BmobException e) {
+                if (e == null) {
+                    for (Shop shop : list) {
+                        shopurl = shop.getShopUrl();
+                        System.out.println("66666" + shopurl);
+                    }
+
+                } else {
+//                        Toast.makeText(Introduce.this, e, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+
     //查询用户昵称
     private void queryNmae() {
         BmobQuery<User> query = new BmobQuery<User>();
@@ -220,7 +255,7 @@ public class MeActivity extends AppCompatActivity {
                     for (User user : list) {
                         //获得nickanme的信息
                         str_nickname = user.getUserNickName();
-                        System.out.println("nickname:" + str_nickname);
+                        System.out.println("666+nickname:" + str_nickname);
                         musernickname.setText(str_nickname);
                     }
                 } else {
@@ -246,8 +281,6 @@ public class MeActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     private void getView() {

@@ -148,7 +148,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
         super.onCreate(savedInstanceState);
         this.context = this;
         //接收用户信息
-        LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+        LatLot latLot = (LatLot) getIntent().getSerializableExtra(LoginActivity.SER_KEY);
         str_account = latLot.getStr_account();
         str_psd = latLot.getStr_psd();
         System.out.println("传送的用户ID" + str_account);
@@ -287,9 +287,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                                         latlot.setShopbest(strbest);
                                         latlot.setShopname(strshopname);
                                         latlot.setShopurl(strurl);
-                                        //传递点击的Marker坐标
-                                        latlot.setLbs_latitude(lbs_lat);
-                                        latlot.setLbs_longitide(lbs_lot);
+
                                         latlot.setStr_account(str_account);
                                         bundle.putSerializable(SER_KEY, latlot);
                                         intent.putExtras(bundle);
@@ -561,14 +559,14 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
      * 将获取到的遍历集合存到str
      */
 
-    public String getAddress(List<CloudPoiInfo> poiList) {
-        String str = null;
-        for (CloudPoiInfo cloudPoiInfo : poiList) {
-            System.out.println(cloudPoiInfo.address);
-            str += cloudPoiInfo.address;
-        }
-        return str;
-    }
+//    public String getAddress(List<CloudPoiInfo> poiList) {
+//        String str = null;
+//        for (CloudPoiInfo cloudPoiInfo : poiList) {
+//            System.out.println(cloudPoiInfo.address);
+//            str += cloudPoiInfo.address;
+//        }
+//        return str;
+//    }
 
     /**
      * 实现LBS搜索的两个方法，获取回调信息
@@ -685,6 +683,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             poilalot = result.getLocation();
             poi_lat = poilalot.latitude;
             poi_lot = poilalot.longitude;
+
             // 点击poimarker跳转到导航页面
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, Routeplan.class);

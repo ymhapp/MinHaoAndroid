@@ -33,8 +33,8 @@ import cn.bmob.v3.listener.FindListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private String strlang = "langye@163.com";
-    private String stralin = "alin@163.com";
+    //    private String strlang = "langye@163.com";
+//    private String stralin = "alin@163.com";
     //传递用户信息
     public final static String SER_KEY = "com.andy.ser";
     private String login_account;
@@ -70,11 +70,10 @@ public class LoginActivity extends AppCompatActivity {
         mlogin.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                System.out.println(6666);
                 //获取EditText中的内容
                 login_account = mlogin_account.getText().toString();
                 login_psd = mlogin_psd.getText().toString();
-                System.out.println("信息" + login_account);
+
 
                 //查询用户的登录信息并进行验证
                 final BmobQuery<User> user = new BmobQuery<User>();
@@ -87,37 +86,8 @@ public class LoginActivity extends AppCompatActivity {
                             for (User user : list) {
                                 bm_psd = user.getUserPassWord();
                             }
-                            if (bm_psd.equals(login_psd) && login_account.equals(strlang)) {
-                                Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, MainActivity.class);
-                                // 将用户信息传输到首页
-                                Bundle bundle = new Bundle();
-                                LatLot latlot = new LatLot();
-                                latlot.setStr_account(login_account);
-                                latlot.setStr_psd(login_psd);
-                                bundle.putSerializable(SER_KEY, latlot);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
-                            } else if (bm_psd.equals(login_psd) && login_account.equals(stralin)) {
-                                Toast.makeText(LoginActivity.this, "管理员登录成功", Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, MainActivity.class);
-                                // 将用户信息传输到首页
-                                Bundle bundle = new Bundle();
-                                LatLot latlot = new LatLot();
-                                latlot.setStr_account(login_account);
-                                latlot.setStr_psd(login_psd);
-                                bundle.putSerializable(SER_KEY, latlot);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
-                            } else if (bm_psd.equals(login_psd)) {
+                            if (bm_psd.equals(login_psd)) {
                                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-
                                 Intent intent = new Intent();
                                 intent.setClass(LoginActivity.this, MainActivity.class);
                                 // 将用户信息传输到首页
@@ -177,9 +147,10 @@ public class LoginActivity extends AppCompatActivity {
         mregister = (Button) findViewById(R.id.register);
     }
 
-
+    //避免重复点击
     public abstract class NoDoubleClickListener implements View.OnClickListener {
 
+        //设置保护时间为3秒
         public static final int MIN_CLICK_DELAY_TIME = 3000;
         private long lastClickTime = 0;
 

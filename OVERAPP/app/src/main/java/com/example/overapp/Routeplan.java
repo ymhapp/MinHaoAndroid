@@ -119,15 +119,16 @@ public class Routeplan extends AppCompatActivity implements OnGetRoutePlanResult
         setContentView(R.layout.activity_routeplan);
 
         // 新页面接收数据
+        final LatLot latLot1 = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+        poi_lat = latLot1.getPoi_latitude();
+        poi_lot = latLot1.getPoi_longitude();
+        poiAdd = latLot1.getPoi_Add();
 
-
-        final LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
+        final LatLot latLot = (LatLot) getIntent().getSerializableExtra(Introduce.SER_KEY);
         lbs_lat = latLot.getLbs_latitude();
         lbs_lot = latLot.getLbs_longitide();
         lbsAdd = latLot.getLbs_Add();
-        poi_lat = latLot.getPoi_latitude();
-        poi_lot = latLot.getPoi_longitude();
-        poiAdd = latLot.getPoi_Add();
+
         System.out.println("这是Route传送的经纬度" + lbs_lat);
         System.out.println("这是Route传送的经纬度" + lbs_lot);
         System.out.println("这是传送的地址" + lbsAdd);

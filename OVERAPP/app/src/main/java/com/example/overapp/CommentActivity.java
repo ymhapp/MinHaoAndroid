@@ -49,13 +49,10 @@ public class CommentActivity extends AppCompatActivity {
         getView();
 
         final LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
-
+        //接收进入的店铺名字以及用户帐号
         str_shopname = latLot.getShopname();
         str_account = latLot.getStr_account();
-        System.out.println("+++++++" + str_account);
-        System.out.println("+++++++" + str_shopname);
-
-
+        System.out.println("66666" + str_account);
 
         //取得ActionBar对象
         ActionBar actionBar = getSupportActionBar();
@@ -76,9 +73,9 @@ public class CommentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //获取输入框中的内容
                 comment_text = commentInput.getText().toString();
-                System.out.println("+++++++3" + comment_text);
 
                 Comment comment = new Comment();
+                comment.setUserAccount(str_account);
                 comment.setUserName(userName);
                 comment.setComment(comment_text);
                 comment.setShopName(str_shopname);
@@ -111,7 +108,7 @@ public class CommentActivity extends AppCompatActivity {
         query.findObjects(new FindListener<User>() {
                               @Override
                               public void done(List<User> list, BmobException e) {
-                                  if (e == null&&list.size()>0) {
+                                  if (e == null && list.size() > 0) {
                                       for (User user : list) {
                                           //获得nickanme的信息
                                           userName = user.getUserNickName();

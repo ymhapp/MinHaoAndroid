@@ -19,9 +19,6 @@ public class LatLot implements Serializable {
     private String poi_Add;
     private double poi_latitude;
     private double poi_longitude;
-    //收藏夹的店铺名字
-    private String cot_shopname;
-    private String cot_shopadd;
     //用户的账号密码
     private String str_account;
     private String str_psd;
@@ -108,21 +105,6 @@ public class LatLot implements Serializable {
         this.poi_longitude = poi_longitude;
     }
 
-    public String getCot_shopname() {
-        return cot_shopname;
-    }
-
-    public void setCot_shopname(String cot_shopname) {
-        this.cot_shopname = cot_shopname;
-    }
-
-    public String getCot_shopadd() {
-        return cot_shopadd;
-    }
-
-    public void setCot_shopadd(String cot_shopadd) {
-        this.cot_shopadd = cot_shopadd;
-    }
 
     public String getStr_account() {
         return str_account;

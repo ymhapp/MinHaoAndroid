@@ -31,6 +31,8 @@ import com.com.overapp.model.LatLot;
 import com.com.overapp.model.Menu;
 import com.com.overapp.model.MenuItemBean;
 import com.com.overapp.model.MyAdapter;
+import com.com.overapp.model.Shop;
+import com.com.overapp.model.User;
 
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class Introduce extends AppCompatActivity {
     private String cot_shopname;
     private String cot_shopadd;
     public final static String SER_KEY = "com.andy.ser";
-
+    public final static String SER_KEY1 = "com.andy.ser1";
     private String str_account;
 
     private String cotobj;
@@ -102,20 +104,21 @@ public class Introduce extends AppCompatActivity {
         final LatLot latLot = (LatLot) getIntent().getSerializableExtra(MainActivity.SER_KEY);
         str_account = latLot.getStr_account();
         shopad = latLot.getShopad();
-        shopname = latLot.getShopname();
         shopurl = latLot.getShopurl();
+        shopname = latLot.getShopname();
         shopBest = latLot.getShopbest();
-        //接收店铺经纬度坐标
-        lbs_lat = latLot.getLbs_latitude();
-        lbs_lot = latLot.getLbs_longitide();
 
-        cot_shopname = latLot.getCot_shopname();
-        cot_shopadd = latLot.getCot_shopadd();
+        //接收店铺信息
+        final LatLot latLot1 = (LatLot) getIntent().getSerializableExtra(MeActivity.SER_KEY);
+        str_account = latLot1.getStr_account();
+        shopurl = latLot1.getShopurl();
+        cot_shopname = latLot1.getShopname();
+        cot_shopadd = latLot1.getShopad();
+
 
         System.out.println("这是传送的URL" + shopurl);
-        System.out.println("这是传送的经纬度" + lbs_lat);
-        System.out.println("这是传送的经纬度" + lbs_lot);
-        System.out.println("dianming" + cot_shopname);
+        System.out.println("666接收" + cot_shopname);
+        System.out.println("666接收" + shopname);
 
 
         //取得ActionBar对象
@@ -124,6 +127,9 @@ public class Introduce extends AppCompatActivity {
         actionBar.show();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("店铺详情");
+
+        //查询店铺的经纬度
+        queryShopLatitude();
 
 
         //设置店名和菜单名
@@ -139,6 +145,7 @@ public class Introduce extends AppCompatActivity {
 
             //开启线程
             new Thread(new PicUrlRunnable(mHandler, THREAD_1, shopurl)).start();
+
             queryMenu();
             queryCotobj();
         } else {
@@ -153,6 +160,7 @@ public class Introduce extends AppCompatActivity {
             queryMenu();
             queryCotobj();
         }
+
 
         //评论button的监听
         btn_comment.setOnClickListener(new View.OnClickListener() {
@@ -196,6 +204,7 @@ public class Introduce extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (btn_like.isChecked()) {
+                    //按下收藏按钮进行收藏
                     Collection collection = new Collection();
                     collection.setCtShopName(shopname);
                     collection.setCtShopBest(shopBest);
@@ -208,14 +217,14 @@ public class Introduce extends AppCompatActivity {
                         }
                     });
                 } else {
-                    System.out.println("+++++esdfs");
+                    //取消收藏时删除店铺
                     Collection collection = new Collection();
                     collection.setObjectId(cotobj);
                     collection.delete(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                System.out.println("+++++66666");
+                                Toast.makeText(Introduce.this, "已取消", Toast.LENGTH_LONG).show();
                             } else {
                                 Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                             }
@@ -240,6 +249,31 @@ public class Introduce extends AppCompatActivity {
 
     }
 
+    //查询店铺的经纬度
+    private void queryShopLatitude() {
+        final BmobQuery<Shop> user = new BmobQuery<Shop>();
+        user.addWhereEqualTo("shopName", shopname);
+        user.setLimit(1);
+        user.findObjects(new FindListener<Shop>() {
+
+
+            @Override
+            public void done(List<Shop> list, BmobException e) {
+                if (e == null) {
+                    for (Shop shop : list) {
+                        lbs_lot = shop.getLongitude();
+                        lbs_lat = shop.getLatitude();
+                        System.out.println("66666" + lbs_lat + lbs_lot);
+                    }
+
+                } else {
+//                        Toast.makeText(Introduce.this, e, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    //查询收藏店铺的id
     private void queryCotobj() {
         String bql = "select * from Collection where ctShopName =? and userAccount=?";
         new BmobQuery<Collection>().doSQLQuery(bql, new SQLQueryListener<Collection>() {

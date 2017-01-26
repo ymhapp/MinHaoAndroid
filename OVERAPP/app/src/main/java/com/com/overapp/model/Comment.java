@@ -10,8 +10,15 @@ public class Comment extends BmobObject {
     private String userName;
     private String comment;
     private String shopName;
+    private String userAccount;
 
+    public String getUserAccount() {
+        return userAccount;
+    }
 
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
+    }
 
     public String getShopName() {
         return shopName;
