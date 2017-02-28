@@ -145,13 +145,15 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         this.context = this;
         //接收用户信息
         LatLot latLot = (LatLot) getIntent().getSerializableExtra(LoginActivity.SER_KEY);
         str_account = latLot.getStr_account();
         str_psd = latLot.getStr_psd();
-        System.out.println("传送的用户ID" + str_account);
+
 
         //初始化百度地图SDK
         SDKInitializer.initialize(getApplicationContext());
@@ -241,8 +243,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                 LatLng position = marker.getPosition();
                 lbs_lat = position.latitude;
                 lbs_lot = position.longitude;
-                System.out.println(lbs_lat);
-                System.out.println(lbs_lot);
+
 
                 //遍历LBS中的marker
                 for (CloudPoiInfo cloudPoiInfo : lbs_poiList) {
@@ -311,25 +312,7 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
                         OnInfoWindowClickListener oinfolistener = null;
                         oinfolistener = new OnInfoWindowClickListener() {
                             public void onInfoWindowClick() {
-//                                // 点击button跳转到导航页面
-//                                Intent intent = new Intent();
-//                                intent.setClass(MainActivity.this, Introduce.class);
-//                                // 用Bundle携带数据
-//                                Bundle bundle = new Bundle();
-//                                // 传递店铺信息
-//                                bundle.putString("shopname", strshopname);
-//                                bundle.putString("shopad", straddress);
-//                                bundle.putString("shopurl", strurl);
-//                                bundle.putString("shopbest", strbest);
 //
-//                                //传递点击的Marker坐标
-//                                LatLot latlot = new LatLot();
-//                                latlot.setLbs_latitude(lbs_lat);
-//                                latlot.setLbs_longitide(lbs_lot);
-////                                latlot.setStr_account(str_account);
-//                                bundle.putSerializable(SER_KEY, latlot);
-//                                intent.putExtras(bundle);
-//                                startActivity(intent);
                             }
                         };
                     }
@@ -456,7 +439,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             case R.id.me:
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, MeActivity.class);
-
                 //将用户数据传输到个人中心
                 Bundle bundle = new Bundle();
                 LatLot latlot = new LatLot();
@@ -501,12 +483,9 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
             if (isFirstIn) {
                 isFirstIn = false;
-
-                LatLng mylocation = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                MapStatusUpdate u = MapStatusUpdateFactory
-                        .newLatLngZoom(mylocation, 17);
+                LatLng mylocation = new LatLng(location.getLatitude(), location.getLongitude());
                 // 设置地图中心点以及缩放级别
+                MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(mylocation, 17);
                 mBaiduMap.animateMapStatus(u);
                 Toast.makeText(context, location.getAddrStr(), Toast.LENGTH_SHORT).show();
             }
@@ -582,12 +561,9 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
 
         if (result != null && result.poiList != null
                 && result.poiList.size() > 0) {
-            Log.d(LTAG,
-                    "onGetSearchResult, result length: "
-                            + result.poiList.size());
+            Log.d(LTAG, "onGetSearchResult, result length: " + result.poiList.size());
             mBaiduMap.clear();
-            BitmapDescriptor bd = BitmapDescriptorFactory
-                    .fromResource(R.drawable.lbs_mark);
+            BitmapDescriptor bd = BitmapDescriptorFactory.fromResource(R.drawable.lbs_mark);
             LatLng ll;
             LatLngBounds.Builder builder = new Builder();
 
@@ -676,10 +652,13 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             Toast.makeText(MainActivity.this, "抱歉，未找到结果", Toast.LENGTH_SHORT)
                     .show();
         } else {
+            //显示点击的marker的名称与地址
             Toast.makeText(MainActivity.this,
                     result.getName() + ": " + result.getAddress(),
                     Toast.LENGTH_SHORT).show();
+
             poiAdd = result.getAddress();
+            //获取点击的marker的坐标
             poilalot = result.getLocation();
             poi_lat = poilalot.latitude;
             poi_lot = poilalot.longitude;
@@ -696,10 +675,6 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             bundle.putSerializable(SER_KEY, latlot);
             intent.putExtras(bundle);
             startActivity(intent);
-
-            System.out.println("poi地址" + poiAdd);
-            System.out.println("poi地址" + poi_lat);
-            System.out.println("poi地址" + poi_lot);
         }
     }
 
@@ -717,11 +692,9 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
     }
 
     private class MyPoiOverlay extends PoiOverlay {
-
         public MyPoiOverlay(BaiduMap baiduMap) {
             super(baiduMap);
         }
-
         @Override
         public boolean onPoiClick(int index) {
             super.onPoiClick(index);
@@ -733,5 +706,4 @@ public class MainActivity extends ActionBarActivity implements CloudListener,
             return true;
         }
     }
-
 }

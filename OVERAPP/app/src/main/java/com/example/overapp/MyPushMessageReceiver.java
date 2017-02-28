@@ -21,6 +21,12 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+//        // TODO Auto-generated method stub
+//        if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
+//            Log.d("bmob", "客户端收到推送内容："+intent.getStringExtra("msg"));
+//            System.out.println("666666"+"爆炸");
+//        }
+//    }
         if (intent.getAction().equals(PushConstants.ACTION_MESSAGE)) {
             // 收到广播时,发送一个通知
             String jsonStr = intent.getStringExtra(PushConstants.EXTRA_PUSH_MESSAGE_STRING);
@@ -49,5 +55,4 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
         }
 
     }
-
 }
